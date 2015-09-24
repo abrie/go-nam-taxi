@@ -1,0 +1,15 @@
+{
+  "name": "go-nam-taxi-2015",
+  "version": "0.0.0",
+  "description": "#GoNamTaxi2015 Server",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "localhost"
+  },
+  "author": "",
+  "license": "ISC"
+}
