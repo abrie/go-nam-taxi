@@ -1,4 +1,4 @@
-var secrets = try_require('./private/api_keys');
+var secrets = tryRequire('./private/api_keys');
 var fs = require('fs');
 var http = require('http');
 var dispatch = require('dispatch');
@@ -44,7 +44,7 @@ function serve404(req, res) {
     res.end();
 }
 
-function try_require(path) {
+function tryRequire(path) {
     try {
         return require(path);
     }
