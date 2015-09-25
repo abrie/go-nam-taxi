@@ -20,12 +20,12 @@ wss.on('connection', function connection(ws) {
 
 var server = http.createServer(
     dispatch({
-        '/client': serveClientPage,
+        '/client': serveClient,
         '.*': serve404
     })
 );
 
-function serveClientPage(req, res) {
+function serveClient(req, res) {
     fs.readFile('client.html', 'utf8', function (err, data) {
         if (err) {
             return console.log(err);
