@@ -1,0 +1,5 @@
+# Keep this directory but don't commit the contents.
+# Because this is where we keep secret API keys that
+# must not be exposed on public repositories.
+*
+!.gitignore
