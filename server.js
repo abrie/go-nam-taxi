@@ -1,3 +1,4 @@
+var secrets = try_require('./private/api_keys');
 var fs = require('fs');
 var http = require('http');
 var dispatch = require('dispatch');
@@ -5,7 +6,7 @@ var WebSocketServer = require('ws').Server;
 var wss = new WebSocketServer({ port:8080 });
 
 wss.on('connection', function connection(ws) {
-    console.log("connection detected");
+    console.log("connection detected.");
     ws.on('message', function incoming(message) {
         console.log(message);
     });
@@ -34,5 +35,16 @@ function serveClientPage(req, res) {
     });
 }
 
+function try_require(path) {
+    try {
+        return require(path);
+    }
+    catch (e) {
+        console.log("FATAL: required path not found: %s", path);
+        process.exit(1);
+    }
+}
+
 server.listen(8081);
 console.log("#GoNamTaxi2015 Prototype Server");
+console.log(secrets);
