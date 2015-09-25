@@ -19,7 +19,10 @@ wss.on('connection', function connection(ws) {
 });
 
 var server = http.createServer(
-    dispatch({ '/client': serveClientPage })
+    dispatch({
+        '/client': serveClientPage,
+        '.*': serve404
+    })
 );
 
 function serveClientPage(req, res) {
@@ -33,6 +36,12 @@ function serveClientPage(req, res) {
             res.end();
         }
     });
+}
+
+function serve404(req, res) {
+    res.writeHead(404, {'Content-Type': 'text/html'});
+    res.write("that does not exist.");
+    res.end();
 }
 
 function try_require(path) {
