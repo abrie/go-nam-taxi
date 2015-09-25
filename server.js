@@ -1,4 +1,5 @@
 var secrets = tryRequire('./private/api_keys');
+var shortid = require('shortid');
 var fs = require('fs');
 var http = require('http');
 var dispatch = require('dispatch');
@@ -6,9 +7,14 @@ var WebSocketServer = require('ws').Server;
 var wss = new WebSocketServer({ port:8080 });
 
 wss.on('connection', function connection(ws) {
-    console.log("connection detected.");
+    addClient(ws);
+
     ws.on('message', function incoming(message) {
         console.log(message);
+    });
+
+    ws.on('close', function close() {
+        removeClient(ws);
     });
 
     ws.send('a response', function ack(error) {
@@ -52,6 +58,23 @@ function tryRequire(path) {
         console.log("FATAL: required path not found: %s", path);
         process.exit(1);
     }
+}
+
+var client_to_id = {};
+var id_to_client = {};
+
+function addClient(ws) {
+    id = shortid.generate(); 
+    client_to_id[ws] = id;
+    id_to_client[id] = ws;
+    console.log("New client connected: %s", id);
+}
+
+function removeClient(ws) {
+    id = client_to_id[ws];
+    delete client_to_id[ws];
+    delete id_to_client[id];
+    console.log("Client disconnected: %s", id);
 }
 
 server.listen(8081);
