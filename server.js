@@ -1,3 +1,4 @@
+var fs = require('fs');
 var http = require('http');
 var dispatch = require('dispatch');
 var WebSocketServer = require('ws').Server;
@@ -17,12 +18,21 @@ wss.on('connection', function connection(ws) {
 });
 
 var server = http.createServer(
-        dispatch({
-            '/client': function(req, res) {
-                res.writeHead(200, {'Content-Type': 'text/html'});
-                res.end('Client interface');
-            }
-        })
-    );
+    dispatch({ '/client': serveClientPage })
+);
+
+function serveClientPage(req, res) {
+    fs.readFile('client.html', 'utf8', function (err, data) {
+        if (err) {
+            return console.log(err);
+        }
+        else {
+            res.writeHead(200, {'Content-Type': 'text/html'});
+            res.write(data);
+            res.end();
+        }
+    });
+}
 
 server.listen(8081);
+console.log("#GoNamTaxi2015 Prototype Server");
