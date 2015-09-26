@@ -3,9 +3,23 @@
     <head>
         <script>
             var ws = new WebSocket('ws://localhost:8080');
+
+            function handleHello(json) {
+                document.getElementById("client_id").innerHTML = json.id;
+            }
+
+            function handleUpdate(json) {
+                document.getElementById("update").innerHTML = json.content;
+            }
+
+            var handlers = {
+                0:handleHello,
+                1:handleUpdate,
+            }
+
             ws.onmessage = function(event) {
                 json = JSON.parse(event.data);
-                document.getElementById("client_id").innerHTML = json.id;
+                handlers[json.type](json);
             };
         </script>
     </head>
@@ -15,5 +29,6 @@
             <span>Client identifier:</span>
             <span id="client_id">...</span>
         </p>
+        <p id="update"></p>
     </body>
 </html>

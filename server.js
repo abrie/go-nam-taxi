@@ -59,7 +59,9 @@ function Client(socket) {
     var fields = {
         socket: socket,
         id: shortid.generate(),
-        sendHello: sendHello
+        sendHello: sendHello,
+        sendUpdate: sendUpdate,
+            
     }
 
     function ackHandler(error) {
@@ -69,7 +71,12 @@ function Client(socket) {
     }
 
     function sendHello() {
-        var raw = JSON.stringify({id:fields.id});
+        var raw = JSON.stringify({id:fields.id, type:0});
+        socket.send(raw, ackHandler);
+    }
+
+    function sendUpdate(content) {
+        var raw = JSON.stringify({id:fields.id, type:1, content:content});
         socket.send(raw, ackHandler);
     }
 
@@ -81,25 +88,37 @@ function Client(socket) {
 }
 
 function Clients() {
-    var client_to_id = {};
-    var id_to_client = {};
+    var clients = [];
+    var updateCounter = 0;
 
     function add(client) {
-        client_to_id[client] = client.id;
-        id_to_client[client.id] = client;
+        clients.push(client);
     }
 
     function remove(client) {
-        delete client_to_id[client];
-        delete id_to_client[client.id];
+        var index = clients.indexOf(client);
+        var removed_client = clients.splice(index, 1);
+    }
+
+    function tick() {
+        clients.forEach( function(client) {
+            client.sendUpdate(updateCounter++);
+        });
     }
 
     return {
         add:add,
-        remove:remove
+        remove:remove,
+        tick: tick
     }
 }
 
 server.listen(8081);
 console.log("#GoNamTaxi2015 Prototype Server");
 console.log(secrets);
+
+function broadcast() {
+    clients.tick();
+}
+
+broadcastTimer = setInterval(broadcast, 500);
