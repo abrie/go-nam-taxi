@@ -115,7 +115,6 @@ function Clients() {
 
 server.listen(8081);
 console.log("#GoNamTaxi2015 Prototype Server");
-console.log(secrets);
 
 function broadcast() {
     clients.tick();
