@@ -6,20 +6,21 @@ var dispatch = require('dispatch');
 var WebSocketServer = require('ws').Server;
 var wss = new WebSocketServer({ port:8080 });
 
-wss.on('connection', function connection(ws) {
-    addClient(ws);
+wss.on('connection',
+    function connection(socket) {
+        addClient(socket);
 
-    ws.on('message', function incoming(message) {
-        console.log(message);
-    });
+        socket.on('message', function incoming(message) {
+            console.log(message);
+        });
 
-    ws.on('close', function close() {
-        removeClient(ws);
-    });
+        socket.on('close', function close() {
+                removeClient(socket);
+        });
 
-    ws.send('a response', function ack(error) {
-        if (error) {
-            console.log(error);
+        socket.send('a response', function ack(error) {
+            if (error) {
+                console.log(error);
         }
     });
 });
