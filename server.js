@@ -6,23 +6,8 @@ var dispatch = require('dispatch');
 var WebSocketServer = require('ws').Server;
 var wss = new WebSocketServer({ port:8080 });
 
-wss.on('connection',
-    function connection(socket) {
-        addClient(socket);
-
-        socket.on('message', function incoming(message) {
-            console.log(message);
-        });
-
-        socket.on('close', function close() {
-                removeClient(socket);
-        });
-
-        socket.send('a response', function ack(error) {
-            if (error) {
-                console.log(error);
-        }
-    });
+wss.on('connection', function onNewConnection(socket) {
+    addClient(socket); 
 });
 
 var server = http.createServer(
@@ -64,11 +49,32 @@ function tryRequire(path) {
 var client_to_id = {};
 var id_to_client = {};
 
+function Client(socket) {
+    socket.on('message', function incoming(message) {
+        console.log(message);
+    });
+
+    socket.on('close', function close() {
+            removeClient(socket);
+    });
+
+    socket.send('hello new client', function ack(error) {
+        if (error) {
+            console.log(error);
+        }
+    });
+
+    return {
+        socket:socket,
+        id: shortid.generate()
+    }
+}
+
 function addClient(ws) {
-    id = shortid.generate(); 
-    client_to_id[ws] = id;
-    id_to_client[id] = ws;
-    console.log("New client connected: %s", id);
+    var client = new Client(ws);
+    client_to_id[client] = client.id;
+    id_to_client[client.id] = client;
+    console.log("New client connected: %s", client.id);
 }
 
 function removeClient(ws) {
