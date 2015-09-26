@@ -15,6 +15,7 @@ wss.on('connection', function onNewConnection(socket) {
         console.log("bye client: %s", client.id);
     });
 
+    client.sendHello();
     console.log("new client: %s", client.id);
 });
 
@@ -55,20 +56,28 @@ function tryRequire(path) {
 }
 
 function Client(socket) {
-    socket.on('message', function incoming(message) {
-        console.log(message);
-    });
+    var fields = {
+        socket: socket,
+        id: shortid.generate(),
+        sendHello: sendHello
+    }
 
-    socket.send('hello new client', function ack(error) {
+    function ackHandler(error) {
         if (error) {
             console.log(error);
         }
+    }
+
+    function sendHello() {
+        var raw = JSON.stringify({id:fields.id});
+        socket.send(raw, ackHandler);
+    }
+
+    socket.on('message', function incoming(message) {
+        console.log("client say: %s : %s", fields.id, message);
     });
 
-    return {
-        socket:socket,
-        id: shortid.generate()
-    }
+    return fields;
 }
 
 function Clients() {

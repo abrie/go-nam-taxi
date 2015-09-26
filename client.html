@@ -4,14 +4,16 @@
         <script>
             var ws = new WebSocket('ws://localhost:8080');
             ws.onmessage = function(event) {
-                console.log("got a message.");
+                json = JSON.parse(event.data);
+                document.getElementById("client_id").innerHTML = json.id;
             };
         </script>
     </head>
     <body>
-        <h1>#GoNamTaxi2015</h2>
+        <h1>#GoNamTaxi2015 Prototype Client</h2>
         <p>
-            This is the client page
+            <span>Client identifier:</span>
+            <span id="client_id">...</span>
         </p>
     </body>
 </html>
