@@ -7,7 +7,7 @@ var WebSocketServer = require('ws').Server;
 var wss = new WebSocketServer({ port:8080 });
 
 wss.on('connection', function onNewConnection(socket) {
-    addClient(socket); 
+    addClient(new Client(socket)); 
 });
 
 var server = http.createServer(
@@ -70,8 +70,7 @@ function Client(socket) {
     }
 }
 
-function addClient(ws) {
-    var client = new Client(ws);
+function addClient(client) {
     client_to_id[client] = client.id;
     id_to_client[client.id] = client;
     console.log("New client connected: %s", client.id);
