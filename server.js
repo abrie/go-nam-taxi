@@ -29,7 +29,8 @@ var server = http.createServer(
 function serveClient(req, res) {
     fs.readFile('client.html', 'utf8', function (err, html) {
         if (err) {
-            return console.log(err);
+            serve500(req, res);
+            console.log("%s", err);
         }
         else {
             res.writeHead(200, {'Content-Type': 'text/html'});
@@ -42,6 +43,12 @@ function serveClient(req, res) {
 function serve404(req, res) {
     res.writeHead(404, {'Content-Type': 'text/html'});
     res.write("that does not exist.");
+    res.end();
+}
+
+function serve500(req, res) {
+    res.writeHead(500, {'Content-Type': 'text/html'});
+    res.write("there was a server error.");
     res.end();
 }
 
