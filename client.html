@@ -1,6 +1,28 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <style type="text/css">
+            #map { 
+                width:500px; 
+                height:500px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>#GoNamTaxi2015 Prototype Client</h1>
+        <p>
+            <span>Client identifier:</span>
+            <span id="client_id">[?]</span>
+        </p>
+        <div id="map">
+            map...
+        </div>
+        <p id="update_id">[?]</p>
+
+        <div id="api-keys">
+            <div id="google_maps_browser_key">SUPPLIED_BY_TEMPLATE</div>
+        </div>
+
         <script type="text/javascript" defer>
             var ws = new WebSocket('ws://localhost:8080');
 
@@ -21,17 +43,28 @@
                 json = JSON.parse(event.data);
                 handlers[json.type](json);
             };
+
+            function loadMapAPI() {
+                var mapSrc = "https://maps.googleapis.com/maps/api/js?key=$1&callback=$2";
+                var apiKey = document.getElementById("google_maps_browser_key").innerHTML;
+                var callback = "initMap";
+                
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = mapSrc.replace("$1", apiKey).replace("$2", callback); 
+                console.log(script.src);
+                document.body.appendChild(script);
+            }
+
+            var MAP = undefined;
+            function initMap() {
+                MAP = new google.maps.Map(document.getElementById('map'), {
+                    center: {lat: -22.5700, lng:17.0836},
+                    zoom: 16 
+                });
+            }
+
+            loadMapAPI();
         </script>
-    </head>
-    <body>
-        <h1>#GoNamTaxi2015 Prototype Client</h1>
-        <p>
-            <span>Client identifier:</span>
-            <span id="client_id">[?]</span>
-        </p>
-        <p id="update_id">[?]</p>
-        <div id="api-keys">
-            <div id="google_maps_browser_key">SUPPLIED_BY_TEMPLATE</div>
-        </div>
     </body>
 </html>
