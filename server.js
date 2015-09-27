@@ -27,13 +27,13 @@ var server = http.createServer(
 );
 
 function serveClient(req, res) {
-    fs.readFile('client.html', 'utf8', function (err, data) {
+    fs.readFile('client.html', 'utf8', function (err, html) {
         if (err) {
             return console.log(err);
         }
         else {
             res.writeHead(200, {'Content-Type': 'text/html'});
-            res.write(data);
+            res.write(html);
             res.end();
         }
     });
@@ -61,7 +61,6 @@ function Client(socket) {
         id: shortid.generate(),
         sendHello: sendHello,
         sendUpdate: sendUpdate,
-            
     }
 
     function ackHandler(error) {
