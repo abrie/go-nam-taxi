@@ -4,6 +4,7 @@ var fs = require('fs');
 var http = require('http');
 var dispatch = require('dispatch');
 var WebSocketServer = require('ws').Server;
+var Plates = require('plates');
 var wss = new WebSocketServer({ port:8080 });
 var clients = new Clients();
 
@@ -33,8 +34,9 @@ function serveClient(req, res) {
             console.log("%s", err);
         }
         else {
+            var output = Plates.bind(html, secrets);
             res.writeHead(200, {'Content-Type': 'text/html'});
-            res.write(html);
+            res.write(output);
             res.end();
         }
     });
