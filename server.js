@@ -7,7 +7,7 @@ var WebSocketServer = require('ws').Server;
 var wss = new WebSocketServer({ port:8080 });
 var clients = new Clients();
 
-wss.on('connection', function onNewConnection(socket) {
+wss.on('connection', function (socket) {
     var client = new Client(socket);
     clients.add(client); 
     socket.on('close', function close() { 
