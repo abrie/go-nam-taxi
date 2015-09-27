@@ -9,7 +9,7 @@
             }
 
             function handleUpdate(json) {
-                document.getElementById("update").innerHTML = json.content;
+                document.getElementById("update_id").innerHTML = json.content;
             }
 
             var handlers = {
@@ -27,8 +27,8 @@
         <h1>#GoNamTaxi2015 Prototype Client</h2>
         <p>
             <span>Client identifier:</span>
-            <span id="client_id">...</span>
+            <span id="client_id">[?]</span>
         </p>
-        <p id="update"></p>
+        <p id="update_id">[?]</p>
     </body>
 </html>
