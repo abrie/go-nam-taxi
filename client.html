@@ -69,12 +69,17 @@
         var Map = undefined;
         function onMapAPILoaded() {
             var map = createMap();
-            var drawingManager = createDrawingManager();
-            drawingManager.setMap(map);
+            var draw = createDrawManager();
+
+            draw.setMap(map);
+            draw.addListener('polylinecomplete', function(poly) {
+                var path = poly.getPath();
+                console.log("path:", path);
+            });
 
             Map = {
                 map: map,
-                drawingManager: drawingManager
+                draw: draw
             }
         }
 
@@ -85,7 +90,7 @@
             });
         }
 
-        function createDrawingManager() {
+        function createDrawManager() {
             // See example at: https://developers.google.com/maps/documentation/roads/snap
             // Enables the polyline drawing control. Click on the map to start drawing a
             // polyline. Each click will add a new vertice. Double-click to stop drawing.
