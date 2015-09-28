@@ -1,70 +1,112 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <style type="text/css">
-            #map { 
-                width:500px; 
-                height:500px;
-            }
-        </style>
-    </head>
-    <body>
-        <h1>#GoNamTaxi2015 Prototype Client</h1>
-        <p>
-            <span>Client identifier:</span>
-            <span id="client_id">[?]</span>
-        </p>
-        <div id="map">
-            map...
-        </div>
-        <p id="update_id">[?]</p>
 
-        <div id="api-keys">
-            <div id="google_maps_browser_key">SUPPLIED_BY_TEMPLATE</div>
-        </div>
+<head>
+    <style type="text/css">
+        #map { 
+            width:500px; 
+            height:500px;
+        }
+    </style>
+</head>
 
-        <script type="text/javascript" defer>
-            var ws = new WebSocket('ws://localhost:8080');
+<body>
+    <h1>#GoNamTaxi2015 Prototype Client</h1>
 
-            function handleHello(json) {
-                document.getElementById("client_id").innerHTML = json.id;
-            }
+    <div>
+        <span>Client identifier:</span>
+        <span id="client_id">[?]</span>
+        <span>Server tickUpdate:</span>
+        <span id="update_id">[?]</span>
+    </div>
 
-            function handleUpdate(json) {
-                document.getElementById("update_id").innerHTML = json.content;
-            }
+    <div id="map">[?]</div>
 
-            var handlers = {
-                0:handleHello,
-                1:handleUpdate,
-            }
+    <div id="api-keys">
+        <div id="google_maps_browser_key">SUPPLIED_BY_TEMPLATE</div>
+    </div>
 
-            ws.onmessage = function(event) {
-                json = JSON.parse(event.data);
-                handlers[json.type](json);
+    <script type="text/javascript" defer>
+        var ws = new WebSocket('ws://localhost:8080');
+
+        function handleHello(json) {
+            document.getElementById("client_id").innerHTML = json.id;
+        }
+
+        function handleUpdate(json) {
+            document.getElementById("update_id").innerHTML = json.content;
+        }
+
+        var handlers = {
+            0:handleHello,
+            1:handleUpdate,
+        }
+
+        ws.onmessage = function(event) {
+            json = JSON.parse(event.data);
+            handlers[json.type](json);
+        };
+
+        function loadMapAPI() {
+            var url = "https://maps.googleapis.com/maps/api/js?key=$1&callback=$2&libraries=$3";
+            var sub = {
+                '$1': document.getElementById("google_maps_browser_key").innerHTML,
+                '$2': "onMapAPILoaded",
+                '$3': ['drawing'].join(',')
             };
-
-            function loadMapAPI() {
-                var mapSrc = "https://maps.googleapis.com/maps/api/js?key=$1&callback=$2";
-                var apiKey = document.getElementById("google_maps_browser_key").innerHTML;
-                var callback = "initMap";
-                
-                var script = document.createElement('script');
-                script.type = 'text/javascript';
-                script.src = mapSrc.replace("$1", apiKey).replace("$2", callback); 
-                console.log(script.src);
-                document.body.appendChild(script);
+            
+            for (var id in sub) {
+                url = url.replace(id, sub[id]);
             }
 
-            var MAP = undefined;
-            function initMap() {
-                MAP = new google.maps.Map(document.getElementById('map'), {
-                    center: {lat: -22.5700, lng:17.0836},
-                    zoom: 16 
-                });
-            }
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = url;
 
-            loadMapAPI();
-        </script>
-    </body>
+            document.body.appendChild(script);
+        }
+
+        var Map = undefined;
+        function onMapAPILoaded() {
+            var map = createMap();
+            var drawingManager = createDrawingManager();
+            drawingManager.setMap(map);
+
+            Map = {
+                map: map,
+                drawingManager: drawingManager
+            }
+        }
+
+        function createMap() {
+            return new google.maps.Map(document.getElementById('map'), {
+                center: {lat: -22.5700, lng:17.0836},
+                zoom: 16 
+            });
+        }
+
+        function createDrawingManager() {
+            // See example at: https://developers.google.com/maps/documentation/roads/snap
+            // Enables the polyline drawing control. Click on the map to start drawing a
+            // polyline. Each click will add a new vertice. Double-click to stop drawing.
+            return new google.maps.drawing.DrawingManager({
+                drawingMode: google.maps.drawing.OverlayType.POLYLINE,
+                drawingControl: true,
+                drawingControlOptions: {
+                    position: google.maps.ControlPosition.TOP_CENTER,
+                    drawingModes: [
+                        google.maps.drawing.OverlayType.POLYLINE
+                    ]
+                },
+                polylineOptions: {
+                    strokeColor: '#696969',
+                    strokeWeight: 2
+                }
+            });
+        }
+
+        loadMapAPI();
+    </script>
+</body>
+
 </html>
