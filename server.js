@@ -3,6 +3,7 @@ var shortid = require('shortid');
 var fs = require('fs');
 var http = require('http');
 var dispatch = require('dispatch');
+var request = require('request');
 var WebSocketServer = require('ws').Server;
 var Plates = require('plates');
 var wss = new WebSocketServer({ port:8080 });
@@ -129,3 +130,15 @@ function broadcast() {
 }
 
 broadcastTimer = setInterval(broadcast, 500);
+
+var r = "https://roads.googleapis.com/v1/snapToRoads?key="+secrets.google_maps_server_key;
+r += "&path=-22.571816,17.080843|-22.571103,17.08359";
+r += "&interpolate=true";
+var testRequest = request.get(r, function(error, response, body) {
+    if (!error && response.statusCode == 200) {
+        console.log(body); 
+    }
+    else {
+        console.log(error, response);
+    }
+});

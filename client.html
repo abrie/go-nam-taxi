@@ -74,7 +74,13 @@
             draw.setMap(map);
             draw.addListener('polylinecomplete', function(poly) {
                 var path = poly.getPath();
-                console.log("path:", path);
+
+                var pathValues = [];
+                for (var i = 0; i < path.getLength(); i++) {
+                    pathValues.push(path.getAt(i).toUrlValue());
+                }
+                var pathString = pathValues.join('|');
+                console.log(pathString);
             });
 
             Map = {
