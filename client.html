@@ -25,11 +25,12 @@
     <script type="text/javascript" defer>
         var ws = new WebSocket('ws://localhost:8080');
         var google_maps_browser_key = undefined;
+        var clientId = undefined;
 
         function handleHello(json) {
-            console.log(json);
             google_maps_browser_key = json.google_maps_browser_key;
-            document.getElementById("client_id").innerHTML = json.id;
+            clientId = json.clientId;
+            document.getElementById("client_id").innerHTML = clientId;
             loadMapAPI();
         }
 

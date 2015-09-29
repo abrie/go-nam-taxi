@@ -14,11 +14,11 @@ wss.on('connection', function (socket) {
     clients.add(client); 
     socket.on('close', function close() { 
         clients.remove(client); 
-        console.log("bye client: %s", client.id);
+        console.log("bye client: %s", client.clientId);
     });
 
     client.sendHello();
-    console.log("new client: %s", client.id);
+    console.log("new client: %s", client.clientId);
 });
 
 var server = http.createServer(
@@ -67,7 +67,7 @@ function tryRequire(path) {
 function Client(socket) {
     var fields = {
         socket: socket,
-        id: shortid.generate(),
+        clientId: shortid.generate(),
         sendHello: sendHello,
         sendUpdate: sendUpdate,
     }
@@ -80,21 +80,26 @@ function Client(socket) {
 
     function sendHello() {
         var raw = JSON.stringify({
-            id: fields.id, 
+            type: 0,
+            clientId: fields.clientId, 
             google_maps_browser_key: secrets.google_maps_browser_key,
-            type:0
         });
 
         socket.send(raw, ackHandler);
     }
 
     function sendUpdate(content) {
-        var raw = JSON.stringify({id:fields.id, type:1, content:content});
+        var raw = JSON.stringify({
+            type: 1, 
+            clientId: fields.clientId, 
+            content: content
+        });
+
         socket.send(raw, ackHandler);
     }
 
     socket.on('message', function incoming(message) {
-        console.log("client say: %s : %s", fields.id, message);
+        console.log("client say: %s : %s", fields.clientId, message);
     });
 
     return fields;
