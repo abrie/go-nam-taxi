@@ -35,9 +35,8 @@ function serveClient(req, res) {
             console.log("%s", err);
         }
         else {
-            var output = Plates.bind(html, secrets);
             res.writeHead(200, {'Content-Type': 'text/html'});
-            res.write(output);
+            res.write(html);
             res.end();
         }
     });
@@ -80,7 +79,12 @@ function Client(socket) {
     }
 
     function sendHello() {
-        var raw = JSON.stringify({id:fields.id, type:0});
+        var raw = JSON.stringify({
+            id: fields.id, 
+            google_maps_browser_key: secrets.google_maps_browser_key,
+            type:0
+        });
+
         socket.send(raw, ackHandler);
     }
 

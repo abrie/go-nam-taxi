@@ -20,17 +20,17 @@
         <span id="update_id">[?]</span>
     </div>
 
-    <div id="map">[?]</div>
-
-    <div id="api-keys">
-        <div id="google_maps_browser_key">SUPPLIED_BY_TEMPLATE</div>
-    </div>
+    <div id="map"><div>
 
     <script type="text/javascript" defer>
         var ws = new WebSocket('ws://localhost:8080');
+        var google_maps_browser_key = undefined;
 
         function handleHello(json) {
+            console.log(json);
+            google_maps_browser_key = json.google_maps_browser_key;
             document.getElementById("client_id").innerHTML = json.id;
+            loadMapAPI();
         }
 
         function handleUpdate(json) {
@@ -58,7 +58,7 @@
         }
 
         function getApiKey() {
-            return document.getElementById("google_maps_browser_key").innerHTML;
+            return google_maps_browser_key;
         }
 
         function loadMapAPI() {
@@ -126,7 +126,6 @@
             });
         }
 
-        loadMapAPI();
     </script>
 </body>
 
