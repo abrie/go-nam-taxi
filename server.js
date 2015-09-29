@@ -134,6 +134,8 @@ function buildRequest(baseUrl, params) {
 }
 
 function snapToRoads(path) {
+    // path is expected as a string: 'lat,lon|lat,lon|etc...'
+    // example: "-22.571816,17.080843|-22.571103,17.08359"
     var baseUrl = "https://roads.googleapis.com/v1/snapToRoads?";
     var params = {
         "key": secrets.google_maps_server_key,
@@ -161,5 +163,3 @@ function snapToRoads(path) {
 
 console.log("#GoNamTaxi2015 Prototype Server");
 server.listen(8081);
-
-snapToRoads("-22.571816,17.080843|-22.571103,17.08359");
