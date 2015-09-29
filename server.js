@@ -122,23 +122,44 @@ function Clients() {
     }
 }
 
-server.listen(8081);
-console.log("#GoNamTaxi2015 Prototype Server");
+function buildRequest(baseUrl, params) {
+    var result = undefined;
 
-function broadcast() {
-    clients.tick();
+    for (var name in params) {
+        result = result === undefined ? baseUrl : result.concat("&");
+        result = result.concat(name + "=" + params[name]);
+    }
+
+    return result;
 }
 
-broadcastTimer = setInterval(broadcast, 500);
+function snapToRoads(path) {
+    var baseUrl = "https://roads.googleapis.com/v1/snapToRoads?";
+    var params = {
+        "key": secrets.google_maps_server_key,
+        "interpolate": true,
+        "path": path,
+    }; 
 
-var r = "https://roads.googleapis.com/v1/snapToRoads?key="+secrets.google_maps_server_key;
-r += "&path=-22.571816,17.080843|-22.571103,17.08359";
-r += "&interpolate=true";
-var testRequest = request.get(r, function(error, response, body) {
-    if (!error && response.statusCode == 200) {
-        console.log(body); 
-    }
-    else {
-        console.log(error, response);
-    }
-});
+    var reqUrl = buildRequest(baseUrl, params);
+
+    request.get(reqUrl, function(error, response, body) {
+        if (error) {
+            console.log(
+                "%s:%s:%s:%s", error.syscall, error.hostname, error.port,error.code);
+        }
+        else if(response.statusCode !== 200) {
+            console.log(
+                "%s: %s", reqUrl, response.statusCode);
+        }
+        else {
+            console.log(
+                "snapToRoads() returned with success");
+        }
+    });
+}
+
+console.log("#GoNamTaxi2015 Prototype Server");
+server.listen(8081);
+
+snapToRoads("-22.571816,17.080843|-22.571103,17.08359");

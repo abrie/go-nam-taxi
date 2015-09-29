@@ -47,21 +47,31 @@
             handlers[json.type](json);
         };
 
-        function loadMapAPI() {
-            var url = "https://maps.googleapis.com/maps/api/js?key=$1&callback=$2&libraries=$3";
-            var sub = {
-                '$1': document.getElementById("google_maps_browser_key").innerHTML,
-                '$2': "onMapAPILoaded",
-                '$3': ['drawing'].join(',')
-            };
-            
-            for (var id in sub) {
-                url = url.replace(id, sub[id]);
+        function buildRequest(baseUrl, params) {
+            var result = undefined;
+            for (var name in params) {
+                result = result === undefined ? baseUrl : result.concat("&");
+                result = result.concat(name + "=" + params[name]);
             }
 
+            return result;
+        }
+
+        function getApiKey() {
+            return document.getElementById("google_maps_browser_key").innerHTML;
+        }
+
+        function loadMapAPI() {
+            var baseUrl = "https://maps.googleapis.com/maps/api/js?";
+            var params = {
+                'key': getApiKey(),
+                'callback': "onMapAPILoaded",
+                'libraries': ['drawing'].join(',')
+            }
+            
             var script = document.createElement('script');
             script.type = 'text/javascript';
-            script.src = url;
+            script.src = buildRequest(baseUrl, params);
 
             document.body.appendChild(script);
         }
