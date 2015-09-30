@@ -1,7 +1,7 @@
 var Secrets = tryRequire('./private/api_keys');
 var ShortId = require('shortid');
 var Fs = require('fs');
-var http = require('http');
+var Http = require('http');
 var dispatch = require('dispatch');
 var request = require('request');
 var WebSocketServer = require('ws').Server;
@@ -20,7 +20,7 @@ wss.on('connection', function (socket) {
     console.log("new client: %s", client.clientId);
 });
 
-var server = http.createServer(
+var server = Http.createServer(
     dispatch({
         '/client': serveClient,
         '.*': serve404
