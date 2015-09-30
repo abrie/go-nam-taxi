@@ -5,10 +5,11 @@ var Http = require('http');
 var Dispatch = require('dispatch');
 var Request = require('request');
 var WebSocketServer = require('ws').Server;
-var wss = new WebSocketServer({ port:8080 });
+
+var socketServer = new WebSocketServer({ port:8080 });
 var clients = new Clients();
 
-wss.on('connection', function (socket) {
+socketServer.on('connection', function (socket) {
     var client = new Client(socket);
     clients.add(client); 
     socket.on('close', function close() { 
