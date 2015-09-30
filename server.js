@@ -1,4 +1,4 @@
-var secrets = tryRequire('./private/api_keys');
+var Secrets = tryRequire('./private/api_keys');
 var ShortId = require('shortid');
 var fs = require('fs');
 var http = require('http');
@@ -81,7 +81,7 @@ function Client(socket) {
         var raw = JSON.stringify({
             type: 0,
             clientId: fields.clientId, 
-            google_maps_browser_key: secrets.google_maps_browser_key,
+            google_maps_browser_key: Secrets.google_maps_browser_key,
         });
 
         socket.send(raw, ackHandler);
@@ -146,7 +146,7 @@ function snapToRoads(path) {
     // example: "-22.571816,17.080843|-22.571103,17.08359"
     var baseUrl = "https://roads.googleapis.com/v1/snapToRoads?";
     var params = {
-        "key": secrets.google_maps_server_key,
+        "key": Secrets.google_maps_server_key,
         "interpolate": true,
         "path": path,
     }; 
