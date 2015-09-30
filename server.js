@@ -1,6 +1,6 @@
 var Secrets = tryRequire('./private/api_keys');
 var ShortId = require('shortid');
-var fs = require('fs');
+var Fs = require('fs');
 var http = require('http');
 var dispatch = require('dispatch');
 var request = require('request');
@@ -28,7 +28,7 @@ var server = http.createServer(
 );
 
 function serveClient(req, res) {
-    fs.readFile('client.html', 'utf8', function (err, html) {
+    Fs.readFile('client.html', 'utf8', function (err, html) {
         if (err) {
             serve500(req, res);
             console.log("%s", err);
