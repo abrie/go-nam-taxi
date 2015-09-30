@@ -97,8 +97,26 @@ function Client(socket) {
         socket.send(raw, ackHandler);
     }
 
-    socket.on('message', function incoming(message) {
-        console.log("client say: %s : %s", fields.clientId, message);
+    function sendSnappedPoints(snappedPoints) {
+        var raw = JSON.stringify({
+            type: 2,
+            clientId: fields.clientId,
+            content: snappedPoints
+        });
+
+        socket.send(raw, ackHandler);
+    }
+
+    socket.on('message', function(message) {
+        json = JSON.parse(message); 
+        if (json.path) {
+            console.log("client said: %s : %s", fields.clientId, message);
+            snapToRoads(json.path, function(err, response) {
+                if (response) {
+                    sendSnappedPoints(response.snappedPoints);
+                }
+            });
+        }
     });
 
     return fields;
@@ -145,7 +163,7 @@ function buildRequest(baseUrl, params) {
     return result;
 }
 
-function snapToRoads(path) {
+function snapToRoads(path, callback) {
     // path is expected as a string: 'lat,lon|lat,lon|etc...'
     // example: "-22.571816,17.080843|-22.571103,17.08359"
     var baseUrl = "https://roads.googleapis.com/v1/snapToRoads?";
@@ -161,14 +179,16 @@ function snapToRoads(path) {
         if (error) {
             console.log(
                 "%s:%s:%s:%s", error.syscall, error.hostname, error.port,error.code);
+            callback("error occurred", undefined);
         }
         else if(response.statusCode !== 200) {
             console.log(
                 "%s: %s", reqUrl, response.statusCode);
+            callback("status not 200", undefined);
+
         }
         else {
-            console.log(
-                "snapToRoads() returned with success");
+            callback(undefined, JSON.parse(body));
         }
     });
 }

@@ -49,12 +49,43 @@
             ui.update_id.innerHTML = json.content;
         }
 
+        function handleSnappedPath(json) {
+            function processSnapToRoadResponse(snappedPoints) {
+                snappedCoordinates = [];
+                placeIdArray = [];
+                for (var i = 0; i < snappedPoints.length; i++) {
+                    var latlng = new google.maps.LatLng(
+                            snappedPoints[i].location.latitude,
+                            snappedPoints[i].location.longitude);
+                    snappedCoordinates.push(latlng);
+                    placeIdArray.push(snappedPoints[i].placeId);
+                }
+
+                return snappedCoordinates;
+            }
+
+            function drawPolyline(coordinates) {
+                var snappedPolyline = new google.maps.Polyline({
+                    path: coordinates,
+                    strokeColor: 'black',
+                    strokeWeight: 3
+                });
+
+                snappedPolyline.setMap(state.map.map);
+            }
+
+            var snappedCoordinates = processSnapToRoadResponse(json.content);
+            drawPolyline(snappedCoordinates);
+
+        }
+
         function connectToServer() {
             var ws = new WebSocket(config.server_websocket_url);
 
             var handlers = {
                 0:handleHello,
                 1:handleUpdate,
+                2:handleSnappedPath,
             }
 
             ws.onmessage = function(event) {
@@ -100,14 +131,18 @@
 
             draw.setMap(map);
             draw.addListener('polylinecomplete', function(poly) {
-                var path = poly.getPath();
-
-                var pathValues = [];
-                for (var i = 0; i < path.getLength(); i++) {
-                    pathValues.push(path.getAt(i).toUrlValue());
+                function pathToString(path) {
+                    var pathValues = [];
+                    for (var i = 0; i < path.getLength(); i++) {
+                        pathValues.push(path.getAt(i).toUrlValue());
+                    }
+                    return pathValues.join('|');
                 }
-                var pathString = pathValues.join('|');
-                console.log(pathString);
+
+                state.websocket.send(JSON.stringify({
+                    clientId: state.clientId,
+                    path: pathToString(poly.getPath())
+                }));
             });
 
             state.map = {
@@ -142,6 +177,7 @@
                 }
             });
         }
+
 
         state.websocket = connectToServer();
 
