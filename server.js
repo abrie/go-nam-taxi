@@ -1,5 +1,5 @@
 var secrets = tryRequire('./private/api_keys');
-var shortid = require('shortid');
+var ShortId = require('shortid');
 var fs = require('fs');
 var http = require('http');
 var dispatch = require('dispatch');
@@ -66,7 +66,7 @@ function tryRequire(path) {
 function Client(socket) {
     var fields = {
         socket: socket,
-        clientId: shortid.generate(),
+        clientId: ShortId.generate(),
         sendHello: sendHello,
         sendUpdate: sendUpdate,
     }
