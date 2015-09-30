@@ -107,7 +107,7 @@ function Client(socket) {
         socket.send(raw, ackHandler);
     }
 
-    socket.on('message', function(message) {
+    function receiveMessage(message) {
         json = JSON.parse(message); 
         if (json.path) {
             snapToRoads(json.path, function(err, response) {
@@ -116,7 +116,9 @@ function Client(socket) {
                 }
             });
         }
-    });
+    }
+
+    socket.on('message', receiveMessage);
 
     return fields;
 }
