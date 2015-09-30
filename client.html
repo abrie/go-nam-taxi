@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+<<<<<<< HEAD
     <head>
         <style type="text/css">
             #map { 
@@ -34,6 +35,59 @@
             function handleUpdate(json) {
                 document.getElementById("update_id").innerHTML = json.content;
             }
+=======
+
+<head>
+    <style type="text/css">
+        #map-container { 
+            width: 500px; 
+            height: 500px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>#GoNamTaxi2015 Prototype Client</h1>
+
+    <div>
+        <span>Client identifier:</span>
+        <span id="client-id">[?]</span>
+        <span>Server tickUpdate:</span>
+        <span id="update-id">[?]</span>
+    </div>
+
+    <div id="map-container"><div>
+
+    <script type="text/javascript" defer>
+        var state = {
+            websocket: undefined,
+            map: undefined
+        }
+
+        var config = {
+            google_maps_browser_key: undefined,
+            server_websocket_url: 'ws://localhost:8080',
+        };
+
+        var ui = {
+            map_container: document.getElementById("map-container"),
+            client_id: document.getElementById("client-id"),
+            update_id: document.getElementById("update-id")
+        };
+
+        function handleHello(json) {
+            config.google_maps_browser_key = json.google_maps_browser_key;
+            ui.client_id.innerHTML = json.clientId;
+            loadMapAPI();
+        }
+
+        function handleUpdate(json) {
+            ui.update_id.innerHTML = json.content;
+        }
+
+        function connectToServer() {
+            var ws = new WebSocket(config.server_websocket_url);
+>>>>>>> dev
 
             var handlers = {
                 0:handleHello,
@@ -41,6 +95,7 @@
             }
 
             ws.onmessage = function(event) {
+<<<<<<< HEAD
                 json = JSON.parse(event.data);
                 handlers[json.type](json);
             };
@@ -67,4 +122,96 @@
             loadMapAPI();
         </script>
     </body>
+=======
+                var json = JSON.parse(event.data);
+                handlers[json.type](json);
+            };
+
+            return ws;
+        }
+
+        function buildRequest(baseUrl, params) {
+            var result = undefined;
+            for (var name in params) {
+                result = result === undefined ? baseUrl : result.concat("&");
+                result = result.concat(name + "=" + params[name]);
+            }
+
+            return result;
+        }
+
+        function getApiKey() {
+            return config.google_maps_browser_key;
+        }
+
+        function loadMapAPI() {
+            var baseUrl = "https://maps.googleapis.com/maps/api/js?";
+            var params = {
+                'key': getApiKey(),
+                'callback': "onMapAPILoaded",
+                'libraries': ['drawing'].join(',')
+            }
+            
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = buildRequest(baseUrl, params);
+
+            document.body.appendChild(script);
+        }
+
+        function onMapAPILoaded() {
+            var map = createMap();
+            var draw = createDrawManager();
+
+            draw.setMap(map);
+            draw.addListener('polylinecomplete', function(poly) {
+                var path = poly.getPath();
+
+                var pathValues = [];
+                for (var i = 0; i < path.getLength(); i++) {
+                    pathValues.push(path.getAt(i).toUrlValue());
+                }
+                var pathString = pathValues.join('|');
+                console.log(pathString);
+            });
+
+            state.map = {
+                map: map,
+                draw: draw
+            }
+        }
+
+        function createMap() {
+            return new google.maps.Map(ui.map_container, {
+                center: {lat: -22.5700, lng:17.0836},
+                zoom: 16 
+            });
+        }
+
+        function createDrawManager() {
+            // See example at: https://developers.google.com/maps/documentation/roads/snap
+            // Enables the polyline drawing control. Click on the map to start drawing a
+            // polyline. Each click will add a new vertice. Double-click to stop drawing.
+            return new google.maps.drawing.DrawingManager({
+                drawingMode: google.maps.drawing.OverlayType.POLYLINE,
+                drawingControl: true,
+                drawingControlOptions: {
+                    position: google.maps.ControlPosition.TOP_CENTER,
+                    drawingModes: [
+                        google.maps.drawing.OverlayType.POLYLINE
+                    ]
+                },
+                polylineOptions: {
+                    strokeColor: '#696969',
+                    strokeWeight: 2
+                }
+            });
+        }
+
+        state.websocket = connectToServer();
+
+    </script>
+</body>
+
+>>>>>>> dev
 </html>

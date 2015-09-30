@@ -15,7 +15,11 @@
   "dependencies": {
     "dispatch": "^1.0.0",
     "node-gyp": "^3.0.3",
+<<<<<<< HEAD
     "plates": "^0.4.11",
+=======
+    "request": "^2.64.0",
+>>>>>>> dev
     "shortid": "^2.2.2",
     "ws": "^0.8.0"
   }
