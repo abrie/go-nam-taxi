@@ -1,9 +1,9 @@
-var Secrets = tryRequire('./private/api_keys');
-var ShortId = require('shortid');
+var Dispatch = require('dispatch');
 var Fs = require('fs');
 var Http = require('http');
-var Dispatch = require('dispatch');
 var Request = require('request');
+var Secrets = tryRequire('./private/api_keys');
+var ShortId = require('shortid');
 var WebSocketServer = require('ws').Server;
 
 var socketServer = new WebSocketServer({ port:8080 });
