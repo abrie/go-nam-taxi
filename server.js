@@ -110,7 +110,6 @@ function Client(socket) {
     socket.on('message', function(message) {
         json = JSON.parse(message); 
         if (json.path) {
-            console.log("client said: %s : %s", fields.clientId, message);
             snapToRoads(json.path, function(err, response) {
                 if (response) {
                     sendSnappedPoints(response.snappedPoints);
