@@ -10,6 +10,11 @@ Clone the repository and install NPM dependencies:
 ```
 npm install
 ```
+##Windows
+* ?
+
+##Linux
+* ?
 
 #Running the application
 ##OSX
