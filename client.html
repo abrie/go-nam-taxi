@@ -25,7 +25,8 @@
     <script type="text/javascript" defer>
         var state = {
             websocket: undefined,
-            map: undefined
+            map: undefined,
+            polylines: undefined
         }
 
         var config = {
@@ -71,7 +72,12 @@
                     strokeWeight: 3
                 });
 
+                if (state.polylines) {
+                    state.polylines.setMap(null);
+                }
+
                 snappedPolyline.setMap(state.map.map);
+                state.polylines = snappedPolyline;
             }
 
             var snappedCoordinates = processSnapToRoadResponse(json.content);
@@ -143,6 +149,8 @@
                     clientId: state.clientId,
                     path: pathToString(poly.getPath())
                 }));
+
+                poly.setMap(null);
             });
 
             state.map = {
