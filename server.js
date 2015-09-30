@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var Dispatch = require('dispatch');
 var Fs = require('fs');
 var Http = require('http');
