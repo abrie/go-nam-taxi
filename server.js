@@ -5,7 +5,6 @@ var http = require('http');
 var dispatch = require('dispatch');
 var request = require('request');
 var WebSocketServer = require('ws').Server;
-var Plates = require('plates');
 var wss = new WebSocketServer({ port:8080 });
 var clients = new Clients();
 
