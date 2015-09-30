@@ -3,7 +3,7 @@
 
 <head>
     <style type="text/css">
-        #map { 
+        #map-container { 
             width:500px; 
             height:500px;
         }
@@ -20,7 +20,7 @@
         <span id="update_id">[?]</span>
     </div>
 
-    <div id="map"><div>
+    <div id="map-container"><div>
 
     <script type="text/javascript" defer>
         var ws = new WebSocket('ws://localhost:8080');
@@ -101,7 +101,8 @@
         }
 
         function createMap() {
-            return new google.maps.Map(document.getElementById('map'), {
+            var element = document.getElementById('map-container');
+            return new google.maps.Map(element, {
                 center: {lat: -22.5700, lng:17.0836},
                 zoom: 16 
             });
