@@ -11,7 +11,7 @@ var clientManager = new ClientManager();
 
 socketServer.on('connection', function (socket) {
     var client = clientManager.createNewClient(socket);
-    socket.on('close', function close() { 
+    socket.on('close', function() { 
         clientManager.remove(client); 
     });
 
