@@ -3,7 +3,7 @@ var ShortId = require('shortid');
 var Fs = require('fs');
 var Http = require('http');
 var Dispatch = require('dispatch');
-var request = require('request');
+var Request = require('request');
 var WebSocketServer = require('ws').Server;
 var wss = new WebSocketServer({ port:8080 });
 var clients = new Clients();
@@ -153,7 +153,7 @@ function snapToRoads(path) {
 
     var reqUrl = buildRequest(baseUrl, params);
 
-    request.get(reqUrl, function(error, response, body) {
+    Request.get(reqUrl, function(error, response, body) {
         if (error) {
             console.log(
                 "%s:%s:%s:%s", error.syscall, error.hostname, error.port,error.code);
