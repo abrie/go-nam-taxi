@@ -8,7 +8,7 @@ var Secrets = tryRequire('./private/api_keys');
 var ShortId = require('shortid');
 var WebSocketServer = require('ws').Server;
 
-var socketServer = new WebSocketServer({ port:8080 });
+var socketServer = new WebSocketServer({ port:9090 });
 var clientManager = new ClientManager();
 
 socketServer.on('connection', function(socket) {
@@ -174,4 +174,4 @@ function snapToRoads(path) {
 }
 
 console.log("#GoNamTaxi2015 Prototype Server");
-server.listen(8081);
+server.listen(8080);
