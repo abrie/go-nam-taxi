@@ -9,7 +9,7 @@ var WebSocketServer = require('ws').Server;
 var socketServer = new WebSocketServer({ port:8080 });
 var clientManager = new ClientManager();
 
-socketServer.on('connection', function (socket) {
+socketServer.on('connection', function(socket) {
     var client = clientManager.createNewClient(socket);
     socket.on('close', function() { 
         clientManager.remove(client); 
@@ -26,7 +26,7 @@ var server = Http.createServer(
 );
 
 function serveClient(req, res) {
-    Fs.readFile('client.html', 'utf8', function (err, html) {
+    Fs.readFile('client.html', 'utf8', function(err, html) {
         if (err) {
             serve500(req, res);
             console.log("%s", err);
