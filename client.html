@@ -4,8 +4,8 @@
 <head>
     <style type="text/css">
         #map-container { 
-            width:500px; 
-            height:500px;
+            width: 500px; 
+            height: 500px;
         }
     </style>
 </head>
@@ -15,27 +15,31 @@
 
     <div>
         <span>Client identifier:</span>
-        <span id="client_id">[?]</span>
+        <span id="client-id">[?]</span>
         <span>Server tickUpdate:</span>
-        <span id="update_id">[?]</span>
+        <span id="update-id">[?]</span>
     </div>
 
     <div id="map-container"><div>
 
     <script type="text/javascript" defer>
-        var ws = new WebSocket('ws://localhost:8080');
         var google_maps_browser_key = undefined;
-        var clientId = undefined;
+        var ws = new WebSocket('ws://localhost:8080');
+
+        var ui = {
+            map_container: document.getElementById("map-container"),
+            client_id: document.getElementById("client-id"),
+            update_id: document.getElementById("update-id")
+        };
 
         function handleHello(json) {
             google_maps_browser_key = json.google_maps_browser_key;
-            clientId = json.clientId;
-            document.getElementById("client_id").innerHTML = clientId;
+            ui.client_id.innerHTML = json.clientId;
             loadMapAPI();
         }
 
         function handleUpdate(json) {
-            document.getElementById("update_id").innerHTML = json.content;
+            ui.update_id.innerHTML = json.content;
         }
 
         var handlers = {
@@ -101,8 +105,7 @@
         }
 
         function createMap() {
-            var element = document.getElementById('map-container');
-            return new google.maps.Map(element, {
+            return new google.maps.Map(ui.map_container, {
                 center: {lat: -22.5700, lng:17.0836},
                 zoom: 16 
             });
