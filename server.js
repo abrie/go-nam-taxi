@@ -10,15 +10,12 @@ var socketServer = new WebSocketServer({ port:8080 });
 var clientManager = new ClientManager();
 
 socketServer.on('connection', function (socket) {
-    var client = new Client(socket);
-    clientManager.add(client); 
+    var client = clientManager.createNewClient(socket);
     socket.on('close', function close() { 
         clientManager.remove(client); 
-        console.log("bye client: %s", client.clientId);
     });
 
     client.sendHello();
-    console.log("new client: %s", client.clientId);
 });
 
 var server = Http.createServer(
@@ -109,13 +106,17 @@ function ClientManager() {
     var clients = [];
     var updateCounter = 0;
 
-    function add(client) {
-        clients.push(client);
+    function createNewClient(socket) {
+        var newClient = new Client(socket);
+        clients.push(newClient);
+        console.log("new client: %s", newClient.clientId);
+        return newClient;
     }
 
     function remove(client) {
         var index = clients.indexOf(client);
         var removed_client = clients.splice(index, 1);
+        console.log("bye client: %s", client.clientId);
     }
 
     function tick() {
@@ -125,7 +126,7 @@ function ClientManager() {
     }
 
     return {
-        add:add,
+        createNewClient:createNewClient,
         remove:remove,
         tick: tick
     }
