@@ -7,13 +7,13 @@ var Request = require('request');
 var WebSocketServer = require('ws').Server;
 
 var socketServer = new WebSocketServer({ port:8080 });
-var clients = new Clients();
+var clientManager = new ClientManager();
 
 socketServer.on('connection', function (socket) {
     var client = new Client(socket);
-    clients.add(client); 
+    clientManager.add(client); 
     socket.on('close', function close() { 
-        clients.remove(client); 
+        clientManager.remove(client); 
         console.log("bye client: %s", client.clientId);
     });
 
@@ -105,7 +105,7 @@ function Client(socket) {
     return fields;
 }
 
-function Clients() {
+function ClientManager() {
     var clients = [];
     var updateCounter = 0;
 
