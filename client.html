@@ -23,11 +23,15 @@
     <div id="map-container"><div>
 
     <script type="text/javascript" defer>
+        var state = {
+            websocket: undefined,
+            map: undefined
+        }
+
         var config = {
             google_maps_browser_key: undefined,
             server_websocket_url: 'ws://localhost:8080',
         };
-        var ws = new WebSocket(config.server_websocket_url);
 
         var ui = {
             map_container: document.getElementById("map-container"),
@@ -45,16 +49,21 @@
             ui.update_id.innerHTML = json.content;
         }
 
-        var handlers = {
-            0:handleHello,
-            1:handleUpdate,
+        function connectToServer() {
+            var ws = new WebSocket(config.server_websocket_url);
+
+            var handlers = {
+                0:handleHello,
+                1:handleUpdate,
+            }
+
+            ws.onmessage = function(event) {
+                var json = JSON.parse(event.data);
+                handlers[json.type](json);
+            };
+
+            return ws;
         }
-
-
-        ws.onmessage = function(event) {
-            json = JSON.parse(event.data);
-            handlers[json.type](json);
-        };
 
         function buildRequest(baseUrl, params) {
             var result = undefined;
@@ -85,7 +94,6 @@
             document.body.appendChild(script);
         }
 
-        var Map = undefined;
         function onMapAPILoaded() {
             var map = createMap();
             var draw = createDrawManager();
@@ -102,7 +110,7 @@
                 console.log(pathString);
             });
 
-            Map = {
+            state.map = {
                 map: map,
                 draw: draw
             }
@@ -134,6 +142,8 @@
                 }
             });
         }
+
+        state.websocket = connectToServer();
 
     </script>
 </body>
