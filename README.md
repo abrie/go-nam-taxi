@@ -2,7 +2,7 @@ Experimental platform for developing a #GoNamTaxi Hackathon Prototype
 
 #Prerequisites
   * [Node](http:https://nodejs.org/)
-  * Google Maps API Keys, for both Server and Browser ([screenshot](/screenshots/create-api-keys.png?raw=true))
+  * Google Maps API Keys, for both Server and Browser.
   
 #Installation
 
@@ -16,7 +16,7 @@ npm install
 The server will not work without a file describing the API keys. These should be stored in the ./private directory, but are not checked into the repository for security reasons. You'll need to generate your own keys. Follow the instructions provided by Google:
 
 * https://developers.google.com/maps/documentation/javascript/get-api-key#key
-* You need two keys, a Browser Key and a Server Key
+* You need two keys, a Browser Key and a Server Key. The Google Console page [looks like this](/screenshots/create-api-keys.png?raw=true).
 
 #Running the application
 
