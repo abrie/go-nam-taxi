@@ -12,7 +12,6 @@ cd go-nam-taxi
 npm install
 ```
 #Running the application
-##OSX
 ```
 node server.js
 ```
