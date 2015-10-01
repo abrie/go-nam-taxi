@@ -5,7 +5,13 @@
     <style type="text/css">
         #map-container { 
             width: 500px; 
-            height: 500px;
+            height: 200px;
+        }
+        video {
+            width: 100%;
+        }
+        #camera-container {
+            width: 500px;
         }
     </style>
 </head>
@@ -18,8 +24,11 @@
         <span id="client-id">[?]</span>
     </div>
 
-    <div id="map-container"><div>
-
+    <div id="map-container"></div>
+    <div id="camera-container">
+        <video id="camera" autoplay></video> 
+    </div>
+    
     <script type="text/javascript" defer>
         var state = {
             websocket: undefined,
@@ -183,6 +192,45 @@
                 }
             });
         }
+
+        function findGetUserMediaFunction() {
+            var tryList = [
+                navigator.getUserMedia,
+                navigator.webkitGetUserMedia, 
+                navigator.mozGetUserMedia,
+                navigator.msGetUserMedia];
+
+            var foundList = tryList.filter(function(e) {
+                return e !== undefined;
+            })
+
+            if (foundList.length > 0) {
+                if (foundList.length > 1) {
+                    console.log("WIERD: More than one getUsermedia function found.");
+                }
+                return foundList[0].bind(navigator);
+            }
+            else {
+                console.log("ERROR: No getUserMedia function found.");
+                return undefined;
+            }
+
+        }
+
+        function getUserMediaError(e) {
+            console.log("getUserMediaError:",e);
+        }
+
+        function getUserMediaSuccess(mediaStream) {
+            var video = document.getElementById('camera');
+            video.src = window.URL.createObjectURL(mediaStream);
+            video.onloadedmetadata = function(e) {
+                console.log("mediaStream ready");
+            };
+        }
+
+        var getUserMedia = findGetUserMediaFunction();
+        getUserMedia({video: true, audio: false}, getUserMediaSuccess, getUserMediaError);
 
 
         state.websocket = connectToServer();
