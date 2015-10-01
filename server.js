@@ -127,6 +127,7 @@ function Client(socket) {
         socket.on('message', receiveMessage);
         console.log("new client: %s", state.clientId);
         sendHello();
+        return this;
     }
 
     function dispose() {
@@ -141,8 +142,8 @@ function ClientManager() {
     var updateCounter = 0;
 
     function add(client) {
-        clients.push(Client);
-        client.init();
+        clients.push(client);
+        return client.init();
     }
 
     function remove(client) {
