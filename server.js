@@ -208,5 +208,5 @@ function snapToRoads(path, callback) {
     });
 }
 
-console.log("#GoNamTaxi2015 Prototype Server");
+console.log("#GoNamTaxi Prototype Server");
 server.listen(8080);
