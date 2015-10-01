@@ -8,7 +8,7 @@
             height: 200px;
         }
         video {
-            width: 100%;
+            width: 250px;
         }
         #camera-container {
             width: 500px;
@@ -27,7 +27,8 @@
         <span id="client-id">[?]</span>
     </div>
 
-    <img id="out-img" src='' width="200px">
+    <div id="captured-images">
+    </div>
 
     <div id="map-container">
         waiting for map to load...
@@ -255,8 +256,11 @@
             console.log(video, canvasContext, canvasContext.canvas);
             canvasContext.drawImage(video, 0, 0);
             // "image/webp" works in Chrome, others will fall back to image/png.
-            document.getElementById('out-img').src = 
+            var imgElement = document.createElement("img");
+            imgElement.setAttribute("width","100px");
+            imgElement.src = 
                 canvasContext.canvas.toDataURL('image/webp');
+            document.getElementById("captured-images").appendChild(imgElement);
         }
 
         var getUserMedia = findGetUserMediaFunction();
