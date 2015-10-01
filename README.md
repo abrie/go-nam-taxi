@@ -33,4 +33,8 @@ You may then start the server:
 ```
 node server.js
 ```
-This will start a server on localhost, listening on port 8080. You may then open a browser and connect to the server using the url: [http://localhost:8080](http://localhost:8080).
+This will start a server on localhost, and if all is good you'll be greeted with the following:
+```
+#GoNamTaxi Prototype Server
+````
+The server is then listening on port 8080. You may then open a browser and connect to the server using the url: [http://localhost:8080](http://localhost:8080).
