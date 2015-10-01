@@ -63,6 +63,7 @@
         function handleHello(json) {
             config.google_maps_browser_key = json.google_maps_browser_key;
             ui.client_id.innerHTML = json.clientId;
+            state.clientId = json.clientId;
             loadMapAPI();
         }
 
@@ -253,14 +254,26 @@
         }
 
         function captureCameraFrame(video, canvasContext) {
-            console.log(video, canvasContext, canvasContext.canvas);
             canvasContext.drawImage(video, 0, 0);
-            // "image/webp" works in Chrome, others will fall back to image/png.
+            var uuEncodedImage = canvasContext.canvas.toDataURL('image/png');
+
+            createImgTag(uuEncodedImage);
+            transmitImage(uuEncodedImage);
+        }
+
+        function createImgTag(uuEncodedImage) {
             var imgElement = document.createElement("img");
             imgElement.setAttribute("width","100px");
-            imgElement.src = 
-                canvasContext.canvas.toDataURL('image/webp');
+            imgElement.src = uuEncodedImage; 
+
             document.getElementById("captured-images").appendChild(imgElement);
+        }
+
+        function transmitImage(uuEncodedImage) {
+            state.websocket.send(JSON.stringify({
+                clientId: state.clientId,
+                image: uuEncodedImage 
+            }));
         }
 
         var getUserMedia = findGetUserMediaFunction();

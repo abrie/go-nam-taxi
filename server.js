@@ -121,6 +121,9 @@ function Client(socket) {
                 }
             });
         }
+        if (json.image) {
+            console.log("recieved an image from clientId:", json.clientId);
+        }
     }
 
     function init() {
