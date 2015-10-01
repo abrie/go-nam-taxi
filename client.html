@@ -13,6 +13,9 @@
         #camera-container {
             width: 500px;
         }
+        #hidden-things {
+            display: none;
+        }
     </style>
 </head>
 
@@ -24,9 +27,18 @@
         <span id="client-id">[?]</span>
     </div>
 
-    <div id="map-container"></div>
+    <img id="out-img" src='' width="200px">
+
+    <div id="map-container">
+        waiting for map to load...
+    </div>
+
     <div id="camera-container">
         <video id="camera" autoplay></video> 
+    </div>
+
+    <div id="hidden-things">
+        <canvas id="camera-canvas"></canvas>
     </div>
     
     <script type="text/javascript" defer>
@@ -217,21 +229,39 @@
 
         }
 
-        function getUserMediaError(e) {
+        function onUserMediaError(e) {
             console.log("getUserMediaError:",e);
         }
 
-        function getUserMediaSuccess(mediaStream) {
-            var video = document.getElementById('camera');
-            video.src = window.URL.createObjectURL(mediaStream);
-            video.onloadedmetadata = function(e) {
-                console.log("mediaStream ready");
+        function onUserMediaSuccess(mediaStream) {
+            var cameraVideo = document.getElementById('camera');
+            cameraVideo.src = window.URL.createObjectURL(mediaStream);
+            cameraVideo.onloadedmetadata = function(e) {
+                var cameraCanvasContext = getCameraCanvasContext(
+                        cameraVideo.videoWidth,
+                        cameraVideo.videoHeight);
+                captureCameraFrame(cameraVideo, cameraCanvasContext);
             };
         }
 
-        var getUserMedia = findGetUserMediaFunction();
-        getUserMedia({video: true, audio: false}, getUserMediaSuccess, getUserMediaError);
+        function getCameraCanvasContext(width, height) {
+            var canvasElement = document.getElementById('camera-canvas');
+            canvasElement.width = width;
+            canvasElement.height = height;
+            return canvasElement.getContext('2d');
+        }
 
+        function captureCameraFrame(video, canvasContext) {
+            console.log(video, canvasContext, canvasContext.canvas);
+            canvasContext.drawImage(video, 0, 0);
+            // "image/webp" works in Chrome, others will fall back to image/png.
+            document.getElementById('out-img').src = 
+                canvasContext.canvas.toDataURL('image/webp');
+        }
+
+        var getUserMedia = findGetUserMediaFunction();
+
+        getUserMedia({video: true, audio: false}, onUserMediaSuccess, onUserMediaError);
 
         state.websocket = connectToServer();
 
