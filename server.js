@@ -123,6 +123,9 @@ function Client(socket) {
         }
         if (json.image) {
             console.log("recieved an image from clientId:", json.clientId);
+            var encodedBuffer = json.image.split(",")[1];
+            var decodedBuffer = new Buffer(encodedBuffer, 'base64');
+            Fs.writeFileSync('image.png', decodedBuffer);
         }
     }
 
