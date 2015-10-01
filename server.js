@@ -12,12 +12,11 @@ var socketServer = new WebSocketServer({ port:9090 });
 var clientManager = new ClientManager();
 
 socketServer.on('connection', function(socket) {
-    var client = clientManager.createNewClient(socket);
+    var client = clientManager.add(new Client(socket));
+
     socket.on('close', function() { 
         clientManager.remove(client); 
     });
-
-    client.sendHello();
 });
 
 var server = Http.createServer(
@@ -64,9 +63,14 @@ function tryRequire(path) {
 }
 
 function Client(socket) {
-    var fields = {
+    var state = {
         socket: socket,
         clientId: ShortId.generate(),
+    }
+
+    var methods = {
+        init: init,
+        dispose: dispose,
         sendHello: sendHello,
         sendUpdate: sendUpdate,
     }
@@ -80,7 +84,7 @@ function Client(socket) {
     function sendHello() {
         var raw = JSON.stringify({
             type: 0,
-            clientId: fields.clientId, 
+            clientId: state.clientId, 
             google_maps_browser_key: Secrets.google_maps_browser_key,
         });
 
@@ -90,7 +94,7 @@ function Client(socket) {
     function sendUpdate(content) {
         var raw = JSON.stringify({
             type: 1, 
-            clientId: fields.clientId, 
+            clientId: state.clientId, 
             content: content
         });
 
@@ -100,7 +104,7 @@ function Client(socket) {
     function sendSnappedPoints(snappedPoints) {
         var raw = JSON.stringify({
             type: 2,
-            clientId: fields.clientId,
+            clientId: state.clientId,
             content: snappedPoints
         });
 
@@ -118,26 +122,32 @@ function Client(socket) {
         }
     }
 
-    socket.on('message', receiveMessage);
+    function init() {
+        socket.on('message', receiveMessage);
+        console.log("new client: %s", state.clientId);
+        sendHello();
+    }
 
-    return fields;
+    function dispose() {
+        console.log("bye client: %s", state.clientId);
+    }
+
+    return methods;
 }
 
 function ClientManager() {
     var clients = [];
     var updateCounter = 0;
 
-    function createNewClient(socket) {
-        var newClient = new Client(socket);
-        clients.push(newClient);
-        console.log("new client: %s", newClient.clientId);
-        return newClient;
+    function add(client) {
+        clients.push(Client);
+        client.init();
     }
 
     function remove(client) {
         var index = clients.indexOf(client);
-        var removed_client = clients.splice(index, 1);
-        console.log("bye client: %s", client.clientId);
+        clients.splice(index, 1);
+        client.dispose();
     }
 
     function tick() {
@@ -147,8 +157,8 @@ function ClientManager() {
     }
 
     return {
-        createNewClient:createNewClient,
-        remove:remove,
+        add: add,
+        remove: remove,
         tick: tick
     }
 }
@@ -189,7 +199,9 @@ function snapToRoads(path, callback) {
 
         }
         else {
-            callback(undefined, JSON.parse(body));
+            var json = JSON.parse(body);
+            console.log(body);
+            callback(undefined, json);
         }
     });
 }
