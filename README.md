@@ -2,7 +2,7 @@ Experimental platform for developing a #GoNamTaxi Hackathon Prototype
 
 #Prerequisites
   * [Node](http:https://nodejs.org/)
-  * Google Maps API Keys, for both Server and Browser
+  * Google Maps API Keys, for both Server and Browser ([screenshot](/screenshots/create-api-keys.png?raw=true))
   
 #Installation
 
