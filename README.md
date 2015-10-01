@@ -8,7 +8,7 @@ Experimental platform for developing a #GoNamTaxi Hackathon Prototype
 Clone the repository and install NPM dependencies:
 ```
 git clone https://github.com/abrie/go-nam-taxi.git
-cd go-name-taxi
+cd go-nam-taxi
 npm install
 ```
 #Running the application
