@@ -57,7 +57,8 @@ function tryRequire(path) {
         return require(path);
     }
     catch (e) {
-        console.log("FATAL: required path not found: %s", path);
+        console.log("FATAL: error while trying to require %s", path);
+        console.log(e);
         process.exit(1);
     }
 }
