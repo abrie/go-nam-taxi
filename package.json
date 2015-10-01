@@ -1,6 +1,6 @@
 {
   "name": "go-nam-taxi-2015",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "#GoNamTaxi2015 Server",
   "main": "server.js",
   "scripts": {
