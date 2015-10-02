@@ -7,6 +7,8 @@ var Request = require('request');
 var Secrets = tryRequire('./private/api_keys');
 var ShortId = require('shortid');
 var WebSocketServer = require('ws').Server;
+var Dns = require('dns');
+var Os = require('os');
 
 var socketServer = new WebSocketServer({ port:9090 });
 var clientManager = new ClientManager();
@@ -214,5 +216,18 @@ function snapToRoads(path, callback) {
     });
 }
 
+function showIpAddress(server) {
+    server.address().port
+    Dns.lookup(Os.hostname(), function (err, add, fam) {
+        if (err) {
+            console.log("Error attempting to discover ip:", err);
+        }
+        if (add) {
+            console.log("Serving on: %s:%s", add, server.address().port);
+        }
+    });
+}
+
 console.log("#GoNamTaxi Prototype Server");
 server.listen(8080);
+showIpAddress(server);
