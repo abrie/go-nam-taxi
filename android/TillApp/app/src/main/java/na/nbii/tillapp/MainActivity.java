@@ -5,9 +5,11 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
+import com.android.volley.toolbox.StringRequest;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,12 +24,13 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                StringRequest stringRequest = NetMethods.getStringRequest("http://localhost:8080/client");
+                NetRequestQueue.getInstance(getApplicationContext()).addRequest(stringRequest);
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
 
-        NetComm.getInstance(this);
     }
 
     @Override
