@@ -8,24 +8,24 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
-public class NetComm {
-    private static NetComm mInstance;
+public class NetRequestQueue {
+    private static NetRequestQueue mInstance;
     private RequestQueue mRequestQueue;
     private static Context mCtx;
 
-    private NetComm(Context context) {
+    private NetRequestQueue(Context context) {
         mCtx = context;
         mRequestQueue = getRequestQueue();
     }
 
-    public static synchronized NetComm getInstance(Context context) {
+    public static synchronized NetRequestQueue getInstance(Context context) {
         if (mInstance == null) {
-            mInstance = new NetComm(context);
+            mInstance = new NetRequestQueue(context);
         }
         return mInstance;
     }
 
-    public RequestQueue getRequestQueue() {
+    private RequestQueue getRequestQueue() {
         if (mRequestQueue == null) {
             // getApplicationContext() is key, it keeps you from leaking the
             // Activity or BroadcastReceiver if someone passes one in.
@@ -34,7 +34,7 @@ public class NetComm {
         return mRequestQueue;
     }
 
-    public <T> void addToRequestQueue(Request<T> req) {
+    public <T> void addRequest(Request<T> req) {
         getRequestQueue().add(req);
     }
 }

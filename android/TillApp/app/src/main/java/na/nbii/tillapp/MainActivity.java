@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 StringRequest stringRequest = NetMethods.getStringRequest("http://localhost:8080/client");
-                NetComm.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+                NetRequestQueue.getInstance(getApplicationContext()).addRequest(stringRequest);
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
