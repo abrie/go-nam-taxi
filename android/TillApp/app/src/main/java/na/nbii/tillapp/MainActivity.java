@@ -26,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        NetComm.getInstance(this);
     }
 
     @Override
