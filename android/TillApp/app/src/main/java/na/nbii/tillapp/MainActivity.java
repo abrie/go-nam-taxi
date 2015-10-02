@@ -23,11 +23,15 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                StringRequest stringRequest = NetMethods.getStringRequest("http://localhost:8080/client");
+            public void onClick(final View view) {
+                StringRequest stringRequest = NetMethods.getStringRequest("http://localhost:8080/tillapp", new NetMethods.StringResponseHandler() {
+                    @Override
+                    public void onStringResponse(String content) {
+                        Snackbar.make(view, content, Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                    }
+                });
                 NetRequestQueue.getInstance(getApplicationContext()).addRequest(stringRequest);
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
             }
         });
 

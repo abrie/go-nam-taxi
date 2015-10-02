@@ -12,13 +12,16 @@ import com.android.volley.toolbox.StringRequest;
  */
 public class NetMethods {
 
-    static public StringRequest getStringRequest(String url) {
+    public interface StringResponseHandler {
+        void onStringResponse(String content);
+    }
+
+    static public StringRequest getStringRequest(String url, final StringResponseHandler handler) {
         return new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.i("WORKED!", response);
-                        // Do something with the response
+                        handler.onStringResponse(response);
                     }
                 },
                 new Response.ErrorListener() {

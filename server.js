@@ -23,10 +23,19 @@ socketServer.on('connection', function(socket) {
 
 var server = Http.createServer(
     Dispatch({
+        '/tillapp': serveTillApp,
         '/client': serveClient,
         '.*': serve404
     })
 );
+
+function serveTillApp(req, res) {
+    var content = {"content":"hello TillApp"};
+    res.writeHead(200, {'Content-Type': 'text/html'});
+    res.write(JSON.stringify(content));
+    res.end();
+    console.log("/tillapp was accessed");
+}
 
 function serveClient(req, res) {
     Fs.readFile('client.html', 'utf8', function(err, html) {
