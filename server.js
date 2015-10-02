@@ -223,7 +223,7 @@ function showIpAddress(server) {
             console.log("Error attempting to discover ip:", err);
         }
         if (add) {
-            console.log("Serving on: %s:%s", add, server.address().port);
+            console.log("Serving on localhost, aka: %s:%s", add, server.address().port);
         }
     });
 }
