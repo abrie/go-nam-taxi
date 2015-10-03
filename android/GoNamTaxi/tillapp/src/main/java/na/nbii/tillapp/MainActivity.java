@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,12 +23,21 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (data == null) {
+            Log.e("TillApp","Null Intent returned to onActivityResult");
+            return;
+        }
+
         Bundle bundle = data.getExtras();
         Barcode barcode = (Barcode) bundle.get(BarcodeCaptureActivity.BarcodeObject);
         String rawValue = "null!";
+        
         if (barcode != null) {
             rawValue = barcode.rawValue;
         }
+
         if (requestCode == RC_BARCODE_CAPTURE) {
             NetRequestQueue.getInstance(getApplicationContext())
                     .addRequest(NetMethods.stringRequest(
@@ -43,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
                             }
                     ));
         }
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -87,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                 //intent.putExtra(BarcodeCaptureActivity.AutoFocus, autoFocus.isChecked());
                 //intent.putExtra(BarcodeCaptureActivity.UseFlash, useFlash.isChecked());
                 intent.putExtra(BarcodeCaptureActivity.AutoFocus, true);
-                intent.putExtra(BarcodeCaptureActivity.UseFlash, true);
+                intent.putExtra(BarcodeCaptureActivity.UseFlash, false);
 
                 startActivityForResult(intent, RC_BARCODE_CAPTURE);
 
