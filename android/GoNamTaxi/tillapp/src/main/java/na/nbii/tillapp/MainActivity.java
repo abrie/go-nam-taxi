@@ -9,6 +9,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import na.nbii.netcomm.NetMethods;
+import na.nbii.netcomm.NetRequestQueue;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override

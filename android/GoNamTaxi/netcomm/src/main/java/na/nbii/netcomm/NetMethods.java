@@ -1,4 +1,4 @@
-package na.nbii.tillapp;
+package na.nbii.netcomm;
 
 import android.util.Log;
 
