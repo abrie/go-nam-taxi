@@ -1,5 +1,6 @@
 package na.nbii.tillapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -14,6 +15,7 @@ import na.nbii.netcomm.NetRequestQueue;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int RC_BARCODE_CAPTURE = 9001;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +52,15 @@ public class MainActivity extends AppCompatActivity {
         coupon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
+                // launch barcode activity.
+                Intent intent = new Intent(getApplication().getApplicationContext(), BarcodeCaptureActivity.class);
+                //intent.putExtra(BarcodeCaptureActivity.AutoFocus, autoFocus.isChecked());
+                //intent.putExtra(BarcodeCaptureActivity.UseFlash, useFlash.isChecked());
+                intent.putExtra(BarcodeCaptureActivity.AutoFocus, true);
+                intent.putExtra(BarcodeCaptureActivity.UseFlash, true);
+
+                startActivityForResult(intent, RC_BARCODE_CAPTURE);
+
                 NetRequestQueue.getInstance(getApplicationContext())
                         .addRequest(NetMethods.stringRequest(
                                 "http://localhost:8080/till/received/coupon/1",

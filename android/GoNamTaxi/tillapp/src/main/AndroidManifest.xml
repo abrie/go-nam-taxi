@@ -21,6 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".BarcodeCaptureActivity"
+            android:label="Read Barcode"/>
     </application>
 
 </manifest>
