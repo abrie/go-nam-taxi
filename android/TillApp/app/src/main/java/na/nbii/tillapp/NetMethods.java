@@ -14,6 +14,7 @@ public class NetMethods {
 
     public interface StringResponseHandler {
         void onString(String content);
+        void onError(String error);
     }
 
     static public StringRequest stringRequest(String url, final StringResponseHandler handler) {
@@ -27,8 +28,7 @@ public class NetMethods {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.i("ERROR!", error.toString());
-                        // Handle error
+                        handler.onError(error.toString());
                     }
                 });
     }

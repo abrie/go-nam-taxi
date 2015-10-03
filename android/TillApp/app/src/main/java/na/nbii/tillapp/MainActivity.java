@@ -31,6 +31,13 @@ public class MainActivity extends AppCompatActivity {
                                         Snackbar.make(view, content, Snackbar.LENGTH_LONG)
                                                 .setAction("Action", null).show();
                                     }
+
+                                    @Override
+                                    public void onError(String error) {
+                                        Snackbar.make(view, error, Snackbar.LENGTH_LONG)
+                                                .setAction("Action", null).show();
+
+                                    }
                                 }
                         ));
             }
