@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="na.nbii.tillapp" >
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -21,9 +21,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name="vision.BarcodeCaptureActivity"
-            android:label="Read Barcode"/>
+        <activity
+            android:name="vision.BarcodeCaptureActivity"
+            android:label="Read Barcode" />
+        <activity
+            android:name="na.nbii.tillapp.SettingsActivity"
+            android:label="Preferences">
+        </activity>
     </application>
 
 </manifest>

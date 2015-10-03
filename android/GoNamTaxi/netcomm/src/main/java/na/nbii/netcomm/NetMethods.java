@@ -1,5 +1,7 @@
 package na.nbii.netcomm;
 
+import android.util.Log;
+
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -16,6 +18,7 @@ public class NetMethods {
     }
 
     static public StringRequest stringRequest(String url, final StringResponseHandler handler) {
+        Log.i("TillApp", "StringRequest:"+url);
         return new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
