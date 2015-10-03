@@ -10,6 +10,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.gms.vision.barcode.Barcode;
+
 import na.nbii.netcomm.NetMethods;
 import na.nbii.netcomm.NetRequestQueue;
 import vision.BarcodeCaptureActivity;
@@ -17,6 +19,33 @@ import vision.BarcodeCaptureActivity;
 public class MainActivity extends AppCompatActivity {
 
     private static final int RC_BARCODE_CAPTURE = 9001;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Bundle bundle = data.getExtras();
+        Barcode barcode = (Barcode) bundle.get(BarcodeCaptureActivity.BarcodeObject);
+        String rawValue = "null!";
+        if (barcode != null) {
+            rawValue = barcode.rawValue;
+        }
+        if (requestCode == RC_BARCODE_CAPTURE) {
+            NetRequestQueue.getInstance(getApplicationContext())
+                    .addRequest(NetMethods.stringRequest(
+                            String.format("http://localhost:8080/till/received/coupon/%s", rawValue),
+                            new NetMethods.StringResponseHandler() {
+                                @Override
+                                public void onString(String content) {
+                                }
+
+                                @Override
+                                public void onError(String error) {
+                                }
+                            }
+                    ));
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,24 +91,6 @@ public class MainActivity extends AppCompatActivity {
 
                 startActivityForResult(intent, RC_BARCODE_CAPTURE);
 
-                NetRequestQueue.getInstance(getApplicationContext())
-                        .addRequest(NetMethods.stringRequest(
-                                "http://localhost:8080/till/received/coupon/1",
-                                new NetMethods.StringResponseHandler() {
-                                    @Override
-                                    public void onString(String content) {
-                                        Snackbar.make(view, content, Snackbar.LENGTH_LONG)
-                                                .setAction("Action", null).show();
-                                    }
-
-                                    @Override
-                                    public void onError(String error) {
-                                        Snackbar.make(view, error, Snackbar.LENGTH_LONG)
-                                                .setAction("Action", null).show();
-
-                                    }
-                                }
-                        ));
             }
         });
 
