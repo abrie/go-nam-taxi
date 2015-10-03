@@ -10,6 +10,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/netcomm" />
             <option value="$PROJECT_DIR$/riderapp" />
             <option value="$PROJECT_DIR$/tillapp" />
           </set>

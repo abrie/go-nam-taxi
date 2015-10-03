@@ -1,1 +1,1 @@
-include ':tillapp', ':riderapp'
+include ':tillapp', ':riderapp', ':netcomm'
