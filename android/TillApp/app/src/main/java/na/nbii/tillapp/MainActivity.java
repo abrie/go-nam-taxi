@@ -9,8 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.android.volley.toolbox.StringRequest;
-
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -24,14 +22,17 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                StringRequest stringRequest = NetMethods.getStringRequest("http://localhost:8080/tillapp", new NetMethods.StringResponseHandler() {
-                    @Override
-                    public void onStringResponse(String content) {
-                        Snackbar.make(view, content, Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
-                    }
-                });
-                NetRequestQueue.getInstance(getApplicationContext()).addRequest(stringRequest);
+                NetRequestQueue.getInstance(getApplicationContext())
+                        .addRequest(NetMethods.stringRequest(
+                                "http://localhost:8080/tillapp",
+                                new NetMethods.StringResponseHandler() {
+                                    @Override
+                                    public void onString(String content) {
+                                        Snackbar.make(view, content, Snackbar.LENGTH_LONG)
+                                                .setAction("Action", null).show();
+                                    }
+                                }
+                        ));
             }
         });
 

@@ -13,15 +13,15 @@ import com.android.volley.toolbox.StringRequest;
 public class NetMethods {
 
     public interface StringResponseHandler {
-        void onStringResponse(String content);
+        void onString(String content);
     }
 
-    static public StringRequest getStringRequest(String url, final StringResponseHandler handler) {
+    static public StringRequest stringRequest(String url, final StringResponseHandler handler) {
         return new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        handler.onStringResponse(response);
+                        handler.onString(response);
                     }
                 },
                 new Response.ErrorListener() {
