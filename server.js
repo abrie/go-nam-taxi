@@ -24,6 +24,7 @@ socketServer.on('connection', function(socket) {
 var server = Http.createServer(
     Dispatch({
         '/till/received/cash': processCashPayment,
+        '/till/received/coupon': processCouponPayment,
         '/client': serveClient,
         '.*': serve404
     })
@@ -31,6 +32,13 @@ var server = Http.createServer(
 
 function processCashPayment(req, res) {
     var content = {"content":"cash payment acknowledged"};
+    res.writeHead(200, {'Content-Type': 'text/html'});
+    res.write(JSON.stringify(content));
+    res.end();
+}
+
+function processCouponPayment(req, res) {
+    var content = {"content":"coupon payment acknowledged"};
     res.writeHead(200, {'Content-Type': 'text/html'});
     res.write(JSON.stringify(content));
     res.end();

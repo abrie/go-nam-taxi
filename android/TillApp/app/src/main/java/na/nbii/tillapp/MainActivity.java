@@ -43,6 +43,31 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        FloatingActionButton coupon = (FloatingActionButton) findViewById(R.id.coupon_button);
+        coupon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                NetRequestQueue.getInstance(getApplicationContext())
+                        .addRequest(NetMethods.stringRequest(
+                                "http://localhost:8080/till/received/coupon",
+                                new NetMethods.StringResponseHandler() {
+                                    @Override
+                                    public void onString(String content) {
+                                        Snackbar.make(view, content, Snackbar.LENGTH_LONG)
+                                                .setAction("Action", null).show();
+                                    }
+
+                                    @Override
+                                    public void onError(String error) {
+                                        Snackbar.make(view, error, Snackbar.LENGTH_LONG)
+                                                .setAction("Action", null).show();
+
+                                    }
+                                }
+                        ));
+            }
+        });
+
     }
 
     @Override
