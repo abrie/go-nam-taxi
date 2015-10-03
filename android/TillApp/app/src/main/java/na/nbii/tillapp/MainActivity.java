@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(final View view) {
                 NetRequestQueue.getInstance(getApplicationContext())
                         .addRequest(NetMethods.stringRequest(
-                                "http://localhost:8080/tillapp",
+                                "http://localhost:8080/till/received/cash",
                                 new NetMethods.StringResponseHandler() {
                                     @Override
                                     public void onString(String content) {
