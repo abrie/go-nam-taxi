@@ -25,10 +25,18 @@ var server = Http.createServer(
     Dispatch({
         '/till/received/cash': processCashPayment,
         '/till/received/coupon': processCouponPayment,
+        '/riderapp/test': processTest,
         '/client': serveClient,
         '.*': serve404
     })
 );
+
+function processTest(req, res) {
+    var content = {"content":"test request acknowledged"};
+    res.writeHead(200, {'Content-Type': 'text/html'});
+    res.write(JSON.stringify(content));
+    res.end();
+}
 
 function processCashPayment(req, res) {
     var content = {"content":"cash payment acknowledged"};

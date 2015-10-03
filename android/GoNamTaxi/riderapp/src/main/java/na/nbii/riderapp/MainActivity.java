@@ -5,9 +5,12 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
+import na.nbii.netcomm.NetMethods;
+import na.nbii.netcomm.NetRequestQueue;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,9 +24,25 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onClick(final View view) {
+                NetRequestQueue.getInstance(getApplicationContext())
+                        .addRequest(NetMethods.stringRequest(
+                                "http://localhost:8080/riderapp/test",
+                                new NetMethods.StringResponseHandler() {
+                                    @Override
+                                    public void onString(String content) {
+                                        Snackbar.make(view, content, Snackbar.LENGTH_LONG)
+                                                .setAction("Action", null).show();
+                                    }
+
+                                    @Override
+                                    public void onError(String error) {
+                                        Snackbar.make(view, error, Snackbar.LENGTH_LONG)
+                                                .setAction("Action", null).show();
+
+                                    }
+                                }
+                        ));
             }
         });
     }
