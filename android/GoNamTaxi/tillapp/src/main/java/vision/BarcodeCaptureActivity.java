@@ -1,4 +1,4 @@
-package na.nbii.tillapp;
+package vision;
 
 /**
  * Created by abrie on 15-10-03.
@@ -36,6 +36,8 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
+
+import na.nbii.tillapp.R;
 
 /**
  * Activity for the multi-tracker app.  This app detects barcodes and displays the value with the

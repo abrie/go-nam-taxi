@@ -12,6 +12,7 @@ import android.view.View;
 
 import na.nbii.netcomm.NetMethods;
 import na.nbii.netcomm.NetRequestQueue;
+import vision.BarcodeCaptureActivity;
 
 public class MainActivity extends AppCompatActivity {
 

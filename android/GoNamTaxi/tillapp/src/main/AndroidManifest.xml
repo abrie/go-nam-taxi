@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".BarcodeCaptureActivity"
+        <activity android:name="vision.BarcodeCaptureActivity"
             android:label="Read Barcode"/>
     </application>
 

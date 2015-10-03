@@ -8,16 +8,16 @@
     android:layout_height="match_parent"
     android:keepScreenOn="true">
 
-  <na.nbii.tillapp.CameraSourcePreview
+  <vision.CameraSourcePreview
       android:id="@+id/preview"
       android:layout_width="match_parent"
       android:layout_height="match_parent">
 
-    <na.nbii.tillapp.GraphicOverlay
+    <vision.GraphicOverlay
         android:id="@+id/graphicOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-  </na.nbii.tillapp.CameraSourcePreview>
+  </vision.CameraSourcePreview>
 
 </LinearLayout>
