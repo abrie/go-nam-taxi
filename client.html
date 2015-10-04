@@ -23,6 +23,10 @@
             border: 1px solid gray;
         }
 
+        table#transactions-table td.invalid {
+            background: #FF3300; 
+        }
+
 
     </style>
 </head>
@@ -95,7 +99,11 @@
                     tr.appendChild( createTd(json.cash_payment) );
                 }
 
-                tr.appendChild( createTd(json.is_valid) );
+                var validIndicator = createTd(json.is_valid);
+                if (!json.is_valid) {
+                    validIndicator.className = "invalid";
+                }
+                tr.appendChild(validIndicator);
 
                 var table = document.getElementById("transactions-table");
                 table.appendChild(tr);
