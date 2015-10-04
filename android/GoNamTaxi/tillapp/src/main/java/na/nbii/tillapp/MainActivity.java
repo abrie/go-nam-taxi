@@ -63,10 +63,17 @@ public class MainActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onError(String error) {
+                                    ShowError(error);
                                 }
                             }
                     ));
         }
+    }
+
+    public void ShowError(String errorMessage) {
+        View view = findViewById(R.id.listView);
+        Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
     }
 
     @Override
@@ -99,9 +106,7 @@ public class MainActivity extends AppCompatActivity {
 
                                     @Override
                                     public void onError(String error) {
-                                        Snackbar.make(view, error, Snackbar.LENGTH_LONG)
-                                                .setAction("Action", null).show();
-
+                                        ShowError(error);
                                     }
                                 }
                         ));
