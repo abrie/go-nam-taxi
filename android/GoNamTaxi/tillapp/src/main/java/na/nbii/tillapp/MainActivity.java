@@ -69,10 +69,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                                     }
 
                                     if (isValid) {
-                                        adapter.add("Ticket Validated:" + rawValue);
+                                        adapter.insert("Ticket Validated:" + rawValue, 0);
                                     }
                                     else {
-                                        adapter.add("TICKET NOT VALID:" + rawValue);
+                                        adapter.insert("TICKET NOT VALID:" + rawValue, 0);
                                     }
                                 }
 
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                                 new NetMethods.StringResponseHandler() {
                                     @Override
                                     public void onString(String content) {
-                                        adapter.add("cash payment acknowledged");
+                                        adapter.insert("cash payment acknowledged", 0);
                                     }
 
                                     @Override
