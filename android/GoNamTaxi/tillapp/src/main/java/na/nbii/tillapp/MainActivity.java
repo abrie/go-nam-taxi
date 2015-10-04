@@ -2,6 +2,7 @@ package na.nbii.tillapp;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == RC_BARCODE_CAPTURE) {
             NetRequestQueue.getInstance(getApplicationContext())
                     .addRequest(NetMethods.stringRequest(
-                            netPath.getUrl("/till/received/coupon/"+rawValue),
+                            netPath.getUrl("/till/received/coupon/" + rawValue),
                             new NetMethods.StringResponseHandler() {
                                 @Override
                                 public void onString(String content) {
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         String serverAddress = sharedPref.getString(SettingsActivity.SERVER_ADDRESS, "undefined");
