@@ -20,13 +20,8 @@ import na.nbii.netcomm.NetRequestQueue;
 import vision.BarcodeCaptureActivity;
 
 public class MainActivity extends AppCompatActivity {
-
     private static final int RC_BARCODE_CAPTURE = 9001;
-    private String baseUrl = "http://undefined:xxxx";
-
-    public String getUrl(String path) {
-        return String.format("%s%s", baseUrl, path);
-    }
+    private NetPath netPath;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -48,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == RC_BARCODE_CAPTURE) {
             NetRequestQueue.getInstance(getApplicationContext())
                     .addRequest(NetMethods.stringRequest(
-                            getUrl("/till/received/coupon/"+rawValue),
+                            netPath.getUrl("/till/received/coupon/"+rawValue),
                             new NetMethods.StringResponseHandler() {
                                 @Override
                                 public void onString(String content) {
@@ -70,7 +65,8 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         String serverAddress = sharedPref.getString(SettingsActivity.SERVER_ADDRESS, "undefined");
         String serverPort = sharedPref.getString(SettingsActivity.SERVER_PORT, "undefined");
-        baseUrl = String.format("http://%s:%s", serverAddress, serverPort);
+        netPath = new NetPath(serverAddress, serverPort);
+        sharedPref.registerOnSharedPreferenceChangeListener(netPath);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -81,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(final View view) {
                 NetRequestQueue.getInstance(getApplicationContext())
                         .addRequest(NetMethods.stringRequest(
-                                getUrl("/till/received/cash"),
+                                netPath.getUrl("/till/received/cash"),
                                 new NetMethods.StringResponseHandler() {
                                     @Override
                                     public void onString(String content) {
