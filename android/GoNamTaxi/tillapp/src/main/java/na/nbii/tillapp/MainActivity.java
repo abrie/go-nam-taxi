@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         if (requestCode == RC_BARCODE_CAPTURE) {
             NetRequestQueue.getInstance(getApplicationContext())
                     .addRequest(NetMethods.stringRequest(
-                            netPath.getUrl("/till/received/coupon/" + rawValue),
+                            netPath.getUrl("/till/received/coupon/"+netPath.getTaxiNumber()+"/"+rawValue),
                             new NetMethods.StringResponseHandler() {
                                 @Override
                                 public void onString(String content) {
@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             public void onClick(final View view) {
                 NetRequestQueue.getInstance(getApplicationContext())
                         .addRequest(NetMethods.stringRequest(
-                                netPath.getUrl("/till/received/cash"),
+                                netPath.getUrl("/till/received/cash/"+netPath.getTaxiNumber()),
                                 new NetMethods.StringResponseHandler() {
                                     @Override
                                     public void onString(String content) {

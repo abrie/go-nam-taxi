@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 var Dispatch = require('dispatch');
 var Fs = require('fs');
 var Http = require('http');
@@ -23,32 +22,31 @@ socketServer.on('connection', function(socket) {
 
 var server = Http.createServer(
     Dispatch({
-        '/till/received/cash': processCashPayment,
-        '/till/received/coupon/:id': processCouponPayment,
-        '/riderapp/test': processTest,
+        '/till/received/cash/:id': processCashPayment,
+        '/till/received/coupon/:id/:code': processCouponPayment,
         '/client': serveClient,
         '.*': serve404
     })
 );
 
-function processTest(req, res) {
-    var content = {"content":"test request acknowledged"};
+function processCashPayment(req, res, taxi_id) {
+    console.log("till %s received cash.", taxi_id);
+    var content = {
+        "content":"cash payment acknowledged",
+        "taxi_id":taxi_id
+    };
     res.writeHead(200, {'Content-Type': 'text/html'});
     res.write(JSON.stringify(content));
     res.end();
 }
 
-function processCashPayment(req, res) {
-    console.log("till received cash.");
-    var content = {"content":"cash payment acknowledged"};
-    res.writeHead(200, {'Content-Type': 'text/html'});
-    res.write(JSON.stringify(content));
-    res.end();
-}
-
-function processCouponPayment(req, res, id) {
-    console.log("till recieved coupon: %s", id);
-    var content = {"content":"coupon payment acknowledged"};
+function processCouponPayment(req, res, taxi_id, code) {
+    console.log("till %s received coupon: %s", taxi_id, code);
+    var content = {
+        "content":"coupon payment acknowledged",
+        "taxi_id":taxi_id,
+        "code":code,
+    };
     res.writeHead(200, {'Content-Type': 'text/html'});
     res.write(JSON.stringify(content));
     res.end();
@@ -237,7 +235,6 @@ function snapToRoads(path, callback) {
 }
 
 function showIpAddress(server) {
-    server.address().port
     Dns.lookup(Os.hostname(), function (err, add, fam) {
         if (err) {
             console.log("Error attempting to discover ip:", err);
