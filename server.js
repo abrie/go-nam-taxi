@@ -31,25 +31,31 @@ var server = Http.createServer(
 
 function processCashPayment(req, res, taxi_id) {
     console.log("till %s received cash.", taxi_id);
-    var content = {
+    var json = JSON.stringify({
         "content":"cash payment acknowledged",
         "taxi_id":taxi_id
-    };
+    });
+
     res.writeHead(200, {'Content-Type': 'text/html'});
-    res.write(JSON.stringify(content));
+    res.write(json);
     res.end();
+
+    clientManager.broadcast(json)
 }
 
 function processCouponPayment(req, res, taxi_id, code) {
     console.log("till %s received coupon: %s", taxi_id, code);
-    var content = {
+    var json = JSON.stringify({
         "content":"coupon payment acknowledged",
         "taxi_id":taxi_id,
         "code":code,
-    };
+    });
+
     res.writeHead(200, {'Content-Type': 'text/html'});
-    res.write(JSON.stringify(content));
+    res.write(json);
     res.end();
+
+    clientManager.broadcast(json)
 }
 
 function serveClient(req, res) {

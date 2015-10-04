@@ -11,7 +11,7 @@
             width: 250px;
         }
         #hidden-things {
-            display: none;
+            /*display: none;*/
         }
     </style>
 </head>
@@ -26,6 +26,11 @@
 
     <div id="map-container">
         waiting for map to load...
+    </div>
+
+    <div id="hidden-things">
+        debug block
+        <div id="last-message"></div>
     </div>
 
     <script type="text/javascript" defer>
@@ -43,7 +48,7 @@
         var ui = {
             map_container: document.getElementById("map-container"),
             client_id: document.getElementById("client-id"),
-            update_id: document.getElementById("update-id")
+            last_message: document.getElementById("last-message")
         };
 
         function handleHello(json) {
@@ -53,8 +58,8 @@
             loadMapAPI();
         }
 
-        function handleUpdate(json) {
-            ui.update_id.innerHTML = json.content;
+        function handleMessage(json) {
+            ui.last_message.innerHTML = json.content;
         }
 
         function handleSnappedPath(json) {
@@ -97,7 +102,7 @@
 
             var handlers = {
                 0:handleHello,
-                1:handleUpdate,
+                1:handleMessage,
                 2:handleSnappedPath,
             }
 
