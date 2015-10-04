@@ -33,7 +33,8 @@ function processCashPayment(req, res, taxi_id) {
     console.log("till %s received cash.", taxi_id);
     var json = JSON.stringify({
         "content":"cash payment acknowledged",
-        "taxi_id":taxi_id
+        "taxi_id":taxi_id,
+        "cash_payment":"cash payment",
     });
 
     res.writeHead(200, {'Content-Type': 'text/html'});
@@ -48,7 +49,7 @@ function processCouponPayment(req, res, taxi_id, code) {
     var json = JSON.stringify({
         "content":"coupon payment acknowledged",
         "taxi_id":taxi_id,
-        "code":code,
+        "ticket_payment":code,
     });
 
     res.writeHead(200, {'Content-Type': 'text/html'});

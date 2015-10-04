@@ -29,6 +29,11 @@
         waiting for map to load...
     </div>
 
+    <div id="transactions">
+        <table id="transaction-table">
+        </table>
+    </div>
+
     <div id="hidden-things">
         debug block
         <div id="last-message"></div>
@@ -59,7 +64,31 @@
             loadMapAPI();
         }
 
-        function handleMessage(json) {
+        function createTd(text) {
+            var result = document.createElement("td");
+            result.innerHTML = text;
+            return result;
+        }
+
+        function handleMessage(up) {
+            var json = JSON.parse(up.content);
+            if (json.taxi_id) {
+                var tr = document.createElement("tr");
+                tr.appendChild( createTd(json.taxi_id) );
+                if (json.ticket_payment) {
+                    tr.appendChild( createTd(json.ticket_payment) );
+
+                }
+                if (json.cash_payment) {
+                    tr.appendChild( createTd(json.cash_payment) );
+                }
+
+                var table = document.getElementById("transaction-table");
+                table.appendChild(tr);
+                console.log(tr);
+            }
+
+
             ui.last_message.innerHTML = json.content;
         }
 
