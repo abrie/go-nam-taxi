@@ -8,6 +8,7 @@ var ShortId = require('shortid');
 var WebSocketServer = require('ws').Server;
 var Dns = require('dns');
 var Os = require('os');
+var Moment = require('moment');
 
 var socketServer = new WebSocketServer({ port:9090 });
 var clientManager = new ClientManager();
@@ -35,6 +36,7 @@ function processCashPayment(req, res, taxi_id) {
         "content":"cash payment acknowledged",
         "taxi_id":taxi_id,
         "cash_payment":"cash payment",
+        "time": Moment.utc()
     });
 
     res.writeHead(200, {'Content-Type': 'text/html'});
@@ -46,10 +48,12 @@ function processCashPayment(req, res, taxi_id) {
 
 function processCouponPayment(req, res, taxi_id, code) {
     console.log("till %s received coupon: %s", taxi_id, code);
+
     var json = JSON.stringify({
         "content":"coupon payment acknowledged",
         "taxi_id":taxi_id,
         "ticket_payment":code,
+        "time": Moment.utc()
     });
 
     res.writeHead(200, {'Content-Type': 'text/html'});
