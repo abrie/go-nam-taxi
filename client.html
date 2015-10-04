@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+
     <style type="text/css">
         #map-container { 
             width: 500px; 
@@ -13,14 +14,23 @@
             display: none;
         }
 
+        table#transactions-table {
+            width: 100%;
+        }
+
+        table#transactions-table td {
+            border: 1px solid gray;
+        }
+
+
     </style>
 </head>
 
 <body>
-    <h1>#GoNamTaxi Prototype Client</h1>
+    <h1>#GoNamTaxi Prototype Administrator</h1>
 
     <div>
-        <span>Client identifier:</span>
+        <span>Administration identifier:</span>
         <span id="client-id">[?]</span>
     </div>
 
@@ -30,6 +40,10 @@
 
     <div id="transactions-container">
         <table id="transactions-table">
+            <tr id="transactions-header">
+                <td id="transactions-header-taxi-id">Taxi Id</td>
+                <td id="transactions-header-payment">Payment</td>
+            </tr>
         </table>
     </div>
 
