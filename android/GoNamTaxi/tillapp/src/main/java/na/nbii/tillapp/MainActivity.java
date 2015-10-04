@@ -3,6 +3,8 @@ package na.nbii.tillapp;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
@@ -33,6 +35,9 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     ArrayList<String> listItems=new ArrayList<>();
     ArrayAdapter<String> adapter;
+    SoundPool soundPool;
+    int successSound;
+    int failureSound;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -70,9 +75,11 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
                                     if (isValid) {
                                         adapter.insert("Ticket Validated:" + rawValue, 0);
+                                        soundPool.play(successSound, 1, 1, 0, 0, 1);
                                     }
                                     else {
                                         adapter.insert("TICKET NOT VALID:" + rawValue, 0);
+                                        soundPool.play(failureSound, 1, 1, 0, 0, 1);
                                     }
                                 }
 
@@ -102,6 +109,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         netPath = new NetPath(sharedPref);
         sharedPref.registerOnSharedPreferenceChangeListener(this);
         onSharedPreferenceChanged(sharedPref, SettingsActivity.TAXI_NUMBER);
+
+        soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+        failureSound = soundPool.load(this, R.raw.failure, 1);
+        successSound = soundPool.load(this, R.raw.success, 2);
 
         Button cashButton = (Button)findViewById(R.id.btn_pay_cash);
         cashButton.setOnClickListener(new View.OnClickListener() {
