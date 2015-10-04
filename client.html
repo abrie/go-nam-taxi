@@ -10,9 +10,6 @@
         video {
             width: 250px;
         }
-        #camera-container {
-            width: 500px;
-        }
         #hidden-things {
             display: none;
         }
@@ -27,21 +24,10 @@
         <span id="client-id">[?]</span>
     </div>
 
-    <div id="captured-images">
-    </div>
-
     <div id="map-container">
         waiting for map to load...
     </div>
 
-    <div id="camera-container">
-        <video id="camera" autoplay></video> 
-    </div>
-
-    <div id="hidden-things">
-        <canvas id="camera-canvas"></canvas>
-    </div>
-    
     <script type="text/javascript" defer>
         var state = {
             websocket: undefined,
@@ -206,79 +192,6 @@
                 }
             });
         }
-
-        function findGetUserMediaFunction() {
-            var tryList = [
-                navigator.getUserMedia,
-                navigator.webkitGetUserMedia, 
-                navigator.mozGetUserMedia,
-                navigator.msGetUserMedia];
-
-            var foundList = tryList.filter(function(e) {
-                return e !== undefined;
-            })
-
-            if (foundList.length > 0) {
-                if (foundList.length > 1) {
-                    console.log("WIERD: More than one getUsermedia function found.");
-                }
-                return foundList[0].bind(navigator);
-            }
-            else {
-                console.log("ERROR: No getUserMedia function found.");
-                return undefined;
-            }
-
-        }
-
-        function onUserMediaError(e) {
-            console.log("getUserMediaError:",e);
-        }
-
-        function onUserMediaSuccess(mediaStream) {
-            var cameraVideo = document.getElementById('camera');
-            cameraVideo.src = window.URL.createObjectURL(mediaStream);
-            cameraVideo.onloadedmetadata = function(e) {
-                var cameraCanvasContext = getCameraCanvasContext(
-                        cameraVideo.videoWidth,
-                        cameraVideo.videoHeight);
-                captureCameraFrame(cameraVideo, cameraCanvasContext);
-            };
-        }
-
-        function getCameraCanvasContext(width, height) {
-            var canvasElement = document.getElementById('camera-canvas');
-            canvasElement.width = width;
-            canvasElement.height = height;
-            return canvasElement.getContext('2d');
-        }
-
-        function captureCameraFrame(video, canvasContext) {
-            canvasContext.drawImage(video, 0, 0);
-            var uuEncodedImage = canvasContext.canvas.toDataURL('image/png');
-
-            createImgTag(uuEncodedImage);
-            transmitImage(uuEncodedImage);
-        }
-
-        function createImgTag(uuEncodedImage) {
-            var imgElement = document.createElement("img");
-            imgElement.setAttribute("width","100px");
-            imgElement.src = uuEncodedImage; 
-
-            document.getElementById("captured-images").appendChild(imgElement);
-        }
-
-        function transmitImage(uuEncodedImage) {
-            state.websocket.send(JSON.stringify({
-                clientId: state.clientId,
-                image: uuEncodedImage 
-            }));
-        }
-
-        var getUserMedia = findGetUserMediaFunction();
-
-        getUserMedia({video: true, audio: false}, onUserMediaSuccess, onUserMediaError);
 
         state.websocket = connectToServer();
 
