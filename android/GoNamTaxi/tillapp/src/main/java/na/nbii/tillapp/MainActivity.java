@@ -18,6 +18,9 @@ import android.widget.ListView;
 
 import com.google.android.gms.vision.barcode.Barcode;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import na.nbii.netcomm.NetMethods;
@@ -53,12 +56,24 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         if (requestCode == RC_BARCODE_CAPTURE) {
             NetRequestQueue.getInstance(getApplicationContext())
-                    .addRequest(NetMethods.stringRequest(
-                            netPath.getUrl("/till/received/coupon/"+netPath.getTaxiNumber()+"/"+rawValue),
-                            new NetMethods.StringResponseHandler() {
+                    .addRequest(NetMethods.jsonRequest(
+                            netPath.getUrl("/till/received/coupon/" + netPath.getTaxiNumber() + "/" + rawValue),
+                            new NetMethods.JsonResponseHandler() {
                                 @Override
-                                public void onString(String content) {
-                                    adapter.add("QR Ticket:"+rawValue);
+                                public void onJson(JSONObject content) {
+                                    boolean isValid;
+                                    try {
+                                        isValid = content.getBoolean("is_valid");
+                                    } catch(JSONException e) {
+                                        isValid = false;
+                                    }
+
+                                    if (isValid) {
+                                        adapter.add("Ticket Validated:" + rawValue);
+                                    }
+                                    else {
+                                        adapter.add("TICKET NOT VALID:" + rawValue);
+                                    }
                                 }
 
                                 @Override
