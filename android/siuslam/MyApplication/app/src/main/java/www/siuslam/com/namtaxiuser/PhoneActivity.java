@@ -1,13 +1,20 @@
 package www.siuslam.com.namtaxiuser;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -16,6 +23,10 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 import org.apache.http.Header;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
 
 public class PhoneActivity extends AppCompatActivity {
 
@@ -34,7 +45,11 @@ public class PhoneActivity extends AppCompatActivity {
     private ImageButton call;
     private ImageButton erase;
     private TextView label;
+
     ProgressDialog prgDialog1;
+
+    private String pin = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,6 +143,7 @@ public class PhoneActivity extends AppCompatActivity {
         erase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(label.getText().toString().length()>0)
                 label.setText(removeLastChar(label.getText().toString()));
             }
         });
@@ -135,7 +151,10 @@ public class PhoneActivity extends AppCompatActivity {
         call.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Ussd ussd = new Ussd(label.getText().toString());
+                TelephonyManager tMgr = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+                String number = tMgr.getSimSerialNumber();
+                String operator = tMgr.getNetworkOperatorName();
+                Ussd ussd = new Ussd(label.getText().toString(), number, operator, "Khomasdal 28");
                 Gson gson = new GsonBuilder().create();
                 //Use GSON to serialize Array List to JSON
                 Log.e("json:", gson.toJson(ussd));
@@ -157,9 +176,98 @@ public class PhoneActivity extends AppCompatActivity {
         prgDialog1.setMessage("USSD Running...");
         prgDialog1.setCancelable(true);
         prgDialog1.show();
-        params.put("JSONObject", code);
+        params.put("JSON", code);
         client.setTimeout(DEFAULT_TIMEOUT);
-        client.post("http://www.phantime.com/hct/insertTest.php", params, new AsyncHttpResponseHandler() {
+        client.post("http://xlab/logic/api.php", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int i, Header[] headers, byte[] bytes) {
+                final String[] response = new String[1];
+                try {
+                    prgDialog1.dismiss();
+                    response[0] = new String(bytes, "UTF-8");  // Best way to decode using "UTF-8"
+                    System.out.println("Text Decryted using UTF-8 : " + response[0]);
+                    label.setText(response[0]);
+                    JSONObject res = new JSONObject(response[0]);
+                    if (res.getInt("code") == 1) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(PhoneActivity.this, R.style.AppCompatAlertDialogStyle);
+
+                        final EditText input = new EditText(getApplicationContext());
+                        builder.setMessage(res.getString("msg"));
+                        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_NUMBER);
+                        builder.setView(input);
+
+                        builder.setPositiveButton("SEND", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                pin = input.getText().toString();
+                                TelephonyManager tMgr = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+                                String number = tMgr.getSimSerialNumber();
+                                String operator = tMgr.getNetworkOperatorName();
+                                Ussd ussd = new Ussd(pin, number, operator, "Khomasdal 28");
+                                Gson gson = new GsonBuilder().create();
+                                //Use GSON to serialize Array List to JSON
+                                Log.e("json:", gson.toJson(ussd));
+                                sendPin(gson.toJson(ussd));
+
+                            }
+                        });
+                        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                        builder.create();
+                        builder.show();
+                    } else {
+                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(PhoneActivity.this, R.style.AppCompatAlertDialogStyle);
+
+                        // Setting Dialog Message
+                        alertDialog.setMessage(res.getString("msg"));
+
+                        // Setting Positive "Yes" Button
+                        alertDialog.setPositiveButton("OKAY", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                        // Showing Alert Message
+                        alertDialog.show();
+                    }
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+                prgDialog1.dismiss();
+                if (i == 404) {
+                    Toast.makeText(getApplicationContext(), "Requested resource not found", Toast.LENGTH_LONG).show();
+                } else if (i == 500) {
+                    Toast.makeText(getApplicationContext(), "Something went wrong at server end", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet]", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    public void sendPin(String pin) {
+        final int DEFAULT_TIMEOUT = 7000 * 1000;
+        //Create AsycHttpClient object
+        AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params = new RequestParams();
+        prgDialog1 = new ProgressDialog(this);
+        prgDialog1.setMessage("USSD Running...");
+        prgDialog1.setCancelable(true);
+        prgDialog1.show();
+        params.put("JSON", pin);
+        client.setTimeout(DEFAULT_TIMEOUT);
+        client.post("http://xlab/logic/api.php", params, new AsyncHttpResponseHandler() {
+
             @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
 
