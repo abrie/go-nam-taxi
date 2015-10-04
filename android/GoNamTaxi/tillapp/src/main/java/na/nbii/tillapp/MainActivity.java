@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Button cashButton = (Button)findViewById(R.id.pay_cash);
+        Button cashButton = (Button)findViewById(R.id.btn_pay_cash);
         cashButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button ticketButton = (Button)findViewById(R.id.scan_ticket);
+        Button ticketButton = (Button)findViewById(R.id.btn_scan_ticket);
         ticketButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {

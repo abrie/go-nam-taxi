@@ -17,6 +17,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
         onSharedPreferenceChanged(sp, SettingsActivity.SERVER_ADDRESS);
         onSharedPreferenceChanged(sp, SettingsActivity.SERVER_PORT);
+        onSharedPreferenceChanged(sp, SettingsActivity.TAXI_NUMBER);
     }
 
     @Override
@@ -29,6 +30,10 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         else if (key.equals(SettingsActivity.SERVER_PORT)) {
             Preference username = findPreference(key);
             username.setSummary(sharedPreferences.getString(key, "undefined"));
+        }
+        else if (key.equals(SettingsActivity.TAXI_NUMBER)) {
+            Preference username = findPreference(key);
+            username.setSummary(sharedPreferences.getString(key, "WHK-1"));
         }
     }
 

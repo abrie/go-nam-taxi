@@ -5,6 +5,7 @@
 
     <string name="pref_server_ip">Server Address</string>
     <string name="pref_server_port">Server Port</string>
+    <string name="taxi_number">Taxi Number</string>
 
     <string name="scan_ticket">Scan Ticket</string>
     <string name="paid_cash">Accept Cash</string>

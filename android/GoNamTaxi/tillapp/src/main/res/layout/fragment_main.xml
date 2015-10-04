@@ -21,7 +21,7 @@
     </FrameLayout>
 
     <Button
-        android:id="@+id/scan_ticket"
+        android:id="@+id/btn_scan_ticket"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/frame_box"
@@ -36,6 +36,6 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:text="@string/paid_cash"
-        android:id="@+id/pay_cash" />
+        android:id="@+id/btn_pay_cash" />
 
 </RelativeLayout>
