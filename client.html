@@ -32,7 +32,7 @@
 </head>
 
 <body>
-    <h1>#GoNamTaxi Prototype Administrator</h1>
+    <h1>GoNamTaxi Administrator Prototype</h1>
 
     <div id="map-container">
         waiting for map to load...
@@ -43,8 +43,8 @@
             <tr id="transactions-header">
                 <td id="transactions-header-timestamp">Timestamp</td>
                 <td id="transactions-header-taxi-id">Taxi Id</td>
-                <td id="transactions-header-payment">Payment</td>
-                <td id="transactions-header-validated">Valid</td>
+                <td id="transactions-header-payment">Payment Type</td>
+                <td id="transactions-header-validated">Valid?</td>
             </tr>
         </table>
     </div>
@@ -225,7 +225,7 @@
         function createMap() {
             return new google.maps.Map(ui.map_container, {
                 center: {lat: -22.5700, lng:17.0836},
-                zoom: 16 
+                zoom: 13 
             });
         }
 
