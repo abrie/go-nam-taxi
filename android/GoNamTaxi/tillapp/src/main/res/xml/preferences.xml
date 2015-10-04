@@ -3,12 +3,10 @@
 <EditTextPreference
     android:key="pref_server_address"
     android:title="@string/pref_server_ip"
-    android:summary="@string/pref_server_ip_summary"
     android:defaultValue="localhost" />
 <EditTextPreference
     android:key="pref_server_port"
     android:title="@string/pref_server_port"
-    android:summary="@string/pref_server_port_summary"
     android:defaultValue="8080" />
 
 </PreferenceScreen>
