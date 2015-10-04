@@ -13,8 +13,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.google.android.gms.vision.barcode.Barcode;
+
+import java.util.ArrayList;
 
 import na.nbii.netcomm.NetMethods;
 import na.nbii.netcomm.NetRequestQueue;
@@ -23,6 +27,9 @@ import vision.BarcodeCaptureActivity;
 public class MainActivity extends AppCompatActivity {
     private static final int RC_BARCODE_CAPTURE = 9001;
     private NetPath netPath;
+
+    ArrayList<String> listItems=new ArrayList<>();
+    ArrayAdapter<String> adapter;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -35,10 +42,13 @@ public class MainActivity extends AppCompatActivity {
 
         Bundle bundle = data.getExtras();
         Barcode barcode = (Barcode) bundle.get(BarcodeCaptureActivity.BarcodeObject);
-        String rawValue = "null!";
+        final String rawValue;
         
         if (barcode != null) {
             rawValue = barcode.rawValue;
+        }
+        else {
+            rawValue = "error in barcode";
         }
 
         if (requestCode == RC_BARCODE_CAPTURE) {
@@ -48,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
                             new NetMethods.StringResponseHandler() {
                                 @Override
                                 public void onString(String content) {
+                                    adapter.add("QR Ticket:"+rawValue);
                                 }
 
                                 @Override
@@ -83,8 +94,7 @@ public class MainActivity extends AppCompatActivity {
                                 new NetMethods.StringResponseHandler() {
                                     @Override
                                     public void onString(String content) {
-                                        Snackbar.make(view, content, Snackbar.LENGTH_LONG)
-                                                .setAction("Action", null).show();
+                                        adapter.add("cash payment acknowledged");
                                     }
 
                                     @Override
@@ -114,6 +124,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listItems);
+        ListView listView = (ListView) findViewById(R.id.listView);
+        listView.setAdapter(adapter);
     }
 
     @Override
