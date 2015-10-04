@@ -83,7 +83,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
             requestCameraPermission();
         }
 
-        Snackbar.make(mGraphicOverlay, "Tap to capture. Pinch/Stretch to zoom",
+        Snackbar.make(mGraphicOverlay, "Waiting for scannable code...",
                 Snackbar.LENGTH_LONG)
                 .show();
     }
