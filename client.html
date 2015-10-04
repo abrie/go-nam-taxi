@@ -11,6 +11,7 @@
         }
         
         #hidden-things {
+            border: 1px dashed grey;
             display: none;
         }
 
@@ -36,8 +37,10 @@
     <div id="transactions-container">
         <table id="transactions-table">
             <tr id="transactions-header">
+                <td id="transactions-header-timestamp">Timestamp</td>
                 <td id="transactions-header-taxi-id">Taxi Id</td>
                 <td id="transactions-header-payment">Payment</td>
+                <td id="transactions-header-validated">Valid</td>
             </tr>
         </table>
     </div>
@@ -82,21 +85,24 @@
             var json = JSON.parse(up.content);
             if (json.taxi_id) {
                 var tr = document.createElement("tr");
+                tr.appendChild( createTd(json.time) );
                 tr.appendChild( createTd(json.taxi_id) );
+
                 if (json.ticket_payment) {
                     tr.appendChild( createTd(json.ticket_payment) );
-
                 }
                 if (json.cash_payment) {
                     tr.appendChild( createTd(json.cash_payment) );
                 }
+
+                tr.appendChild( createTd(json.is_valid) );
 
                 var table = document.getElementById("transactions-table");
                 table.appendChild(tr);
             }
 
 
-            ui.last_message.innerHTML = json.content;
+            ui.last_message.innerHTML = JSON.stringify(json);
         }
 
         function handleSnappedPath(json) {
