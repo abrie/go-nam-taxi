@@ -8,5 +8,11 @@
     android:key="pref_server_port"
     android:title="@string/pref_server_port"
     android:defaultValue="8080" />
+<EditTextPreference
+    android:key="taxi_number"
+    android:title="@string/taxi_number"
+    android:defaultValue="whk-1" />
+
+
 
 </PreferenceScreen>
