@@ -9,6 +9,7 @@ import android.os.Bundle;
 public class SettingsActivity extends Activity {
     public static String SERVER_ADDRESS = "pref_server_address";
     public static String SERVER_PORT = "pref_server_port";
+    public static String TAXI_NUMBER = "pref_taxi_number";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
