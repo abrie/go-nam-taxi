@@ -6,6 +6,9 @@
     <string name="pref_server_ip">Server Address</string>
     <string name="pref_server_port">Server Port</string>
 
+    <string name="scan_ticket">Scan Ticket</string>
+    <string name="paid_cash">Accept Cash</string>
+
     <string name="ok">OK</string>
     <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
     <string name="no_camera_permission">This application cannot run because it does not have the camera permission.  The application will now exit.</string>
