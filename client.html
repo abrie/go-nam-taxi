@@ -6,7 +6,7 @@
 
     <style type="text/css">
         #map-container { 
-            width: 500px; 
+            width: 100%; 
             height: 200px;
         }
         
@@ -29,11 +29,6 @@
 <body>
     <h1>#GoNamTaxi Prototype Administrator</h1>
 
-    <div>
-        <span>Administration identifier:</span>
-        <span id="client-id">[?]</span>
-    </div>
-
     <div id="map-container">
         waiting for map to load...
     </div>
@@ -49,6 +44,7 @@
 
     <div id="hidden-things">
         <div id="last-message"></div>
+        <span id="client-id">[?]</span>
     </div>
 
     <script type="text/javascript" defer>
