@@ -24,7 +24,7 @@ import na.nbii.netcomm.NetMethods;
 import na.nbii.netcomm.NetRequestQueue;
 import vision.BarcodeCaptureActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final int RC_BARCODE_CAPTURE = 9001;
     private NetPath netPath;
 
@@ -81,15 +81,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        String serverAddress = sharedPref.getString(SettingsActivity.SERVER_ADDRESS, "undefined");
-        String serverPort = sharedPref.getString(SettingsActivity.SERVER_PORT, "undefined");
-        netPath = new NetPath(serverAddress, serverPort);
-        sharedPref.registerOnSharedPreferenceChangeListener(netPath);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, true);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        netPath = new NetPath(sharedPref);
+        sharedPref.registerOnSharedPreferenceChangeListener(this);
+        onSharedPreferenceChanged(sharedPref, SettingsActivity.TAXI_NUMBER);
 
         Button cashButton = (Button)findViewById(R.id.btn_pay_cash);
         cashButton.setOnClickListener(new View.OnClickListener() {
@@ -135,6 +132,18 @@ public class MainActivity extends AppCompatActivity {
         listView.setAdapter(adapter);
     }
 
+    private void setToolbarTitle(String taxiNumber) {
+        String completeTitle = String.format("Till for Taxi %s", taxiNumber);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(completeTitle);
+        }
+        else {
+            toolbar.setTitle(completeTitle);
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -158,5 +167,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(SettingsActivity.TAXI_NUMBER)) {
+            String taxiNumber = sharedPreferences.getString(key, "undefined");
+            setToolbarTitle(taxiNumber);
+        }
     }
 }

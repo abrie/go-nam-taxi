@@ -9,19 +9,25 @@ public class NetPath implements SharedPreferences.OnSharedPreferenceChangeListen
     private String baseUrl = "http://undefined:xxxx";
     private String serverAddress;
     private String serverPort;
+    private String taxiNumber;
 
     public String getUrl(String path) {
         return String.format("%s%s", baseUrl, path);
     }
 
-    public NetPath(String serverAddress, String serverPort) {
-        this.serverAddress = serverAddress;
-        this.serverPort = serverPort;
-        buildBaseUrl();
+    public NetPath(SharedPreferences preferences) {
+        onSharedPreferenceChanged(preferences, SettingsActivity.SERVER_ADDRESS);
+        onSharedPreferenceChanged(preferences, SettingsActivity.SERVER_PORT);
+        onSharedPreferenceChanged(preferences, SettingsActivity.TAXI_NUMBER);
+        preferences.registerOnSharedPreferenceChangeListener(this);
     }
 
     public void buildBaseUrl() {
         baseUrl = String.format("http://%s:%s", serverAddress, serverPort);
+    }
+
+    public String getTaxiNumber() {
+        return taxiNumber;
     }
 
     @Override
@@ -31,6 +37,9 @@ public class NetPath implements SharedPreferences.OnSharedPreferenceChangeListen
         }
         else if (key.equals(SettingsActivity.SERVER_PORT)) {
             serverPort = sharedPreferences.getString(key, "undefined");
+        }
+        else if (key.equals(SettingsActivity.TAXI_NUMBER)) {
+            taxiNumber = sharedPreferences.getString(key, "undefined");
         }
 
         buildBaseUrl();
