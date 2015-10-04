@@ -99,7 +99,7 @@ function Client(socket) {
         init: init,
         dispose: dispose,
         sendHello: sendHello,
-        sendUpdate: sendUpdate,
+        sendMessage: sendMessage,
     }
 
     function ackHandler(error) {
@@ -118,11 +118,11 @@ function Client(socket) {
         socket.send(raw, ackHandler);
     }
 
-    function sendUpdate(content) {
+    function sendMessage(message) {
         var raw = JSON.stringify({
             type: 1, 
             clientId: state.clientId, 
-            content: content
+            content: message
         });
 
         socket.send(raw, ackHandler);
@@ -178,16 +178,16 @@ function ClientManager() {
         client.dispose();
     }
 
-    function tick() {
+    function broadcast(message) {
         clients.forEach( function(client) {
-            client.sendUpdate(updateCounter++);
+            client.sendMessage(message);
         });
     }
 
     return {
         add: add,
         remove: remove,
-        tick: tick
+        broadcast: broadcast
     }
 }
 
