@@ -51,11 +51,11 @@ public class Backend {
     }
 
     public void submitCash(final CashTransactionResultHandler handler) {
-        requestQueue.addRequest(NetMethods.stringRequest(
+        requestQueue.addRequest(NetMethods.jsonRequest(
                 pathBuilder.getUrl("/till/received/cash/" + pathBuilder.getTaxiNumber()),
-                new NetMethods.StringResponseHandler() {
+                new NetMethods.JsonResponseHandler() {
                     @Override
-                    public void onString(String content) {
+                    public void onJson(JSONObject content) {
                         handler.onCashTransactionResult(true);
                     }
 
