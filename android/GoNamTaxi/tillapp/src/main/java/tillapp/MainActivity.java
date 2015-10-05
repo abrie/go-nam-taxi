@@ -92,9 +92,16 @@ public class MainActivity extends AppCompatActivity {
         soundEffects = new SoundEffects(this);
         transactionLog = new TransactionLog(this);
 
+        connectListview();
+        connectButtons();
+    }
+
+    private void connectListview() {
         ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(transactionLog.getAdapter());
+    }
 
+    private void connectButtons() {
         Button cashButton = (Button)findViewById(R.id.btn_pay_cash);
         cashButton.setOnClickListener(new View.OnClickListener() {
             @Override
