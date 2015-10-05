@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent intent = new Intent();
-            intent.setClassName(this, "SettingsActivity");
+            intent.setClassName(this, "tillapp.SettingsActivity");
             startActivity(intent);
             return true;
         }
