@@ -10,22 +10,24 @@ import na.nbii.netcomm.NetRequestQueue;
  * Created by abrie on 15-10-04.
  */
 public class Backend {
-    private NetRequestQueue requestQueue;
-    private PathBuilder pathBuilder;
+    private final NetRequestQueue requestQueue;
+    private final PathBuilder pathBuilder;
 
     public interface CouponTransactionResultHandler {
-        void onCouponValidationResult(boolean isValid, long age);
+        void onCouponValidationResult(boolean isValid, long age, long timeStamp);
         void onCouponValidationError(String error);
     }
 
     public interface CashTransactionResultHandler {
-        void onCashTransactionResult(boolean isValid);
+        void onCashTransactionResult(long timeStamp);
         void onCashTransactionError(String error);
     }
 
     public Backend(NetRequestQueue netRequestQueue, PathBuilder pathBuilder) {
         this.requestQueue = netRequestQueue;
         this.pathBuilder = pathBuilder;
+
+
     }
 
     public void validateCoupon(String rawValue, final CouponTransactionResultHandler handler) {
@@ -37,7 +39,8 @@ public class Backend {
                         try {
                             boolean isValid = content.getBoolean("is_valid");
                             long age = content.getLong("age");
-                            handler.onCouponValidationResult(isValid, age);
+                            long timeStamp = content.getLong("time");
+                            handler.onCouponValidationResult(isValid, age, timeStamp);
                         } catch (JSONException e) {
                             handler.onCouponValidationError("failed to parse JSON");
                         }
@@ -56,7 +59,12 @@ public class Backend {
                 new NetMethods.JsonResponseHandler() {
                     @Override
                     public void onJson(JSONObject content) {
-                        handler.onCashTransactionResult(true);
+                        try {
+                            long timestamp = content.getLong("time");
+                            handler.onCashTransactionResult(timestamp);
+                        } catch(JSONException e) {
+                            handler.onCashTransactionError("failed to parse JSON");
+                        }
                     }
 
                     @Override

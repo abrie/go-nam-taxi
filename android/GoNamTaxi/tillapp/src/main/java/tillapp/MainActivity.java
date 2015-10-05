@@ -44,12 +44,12 @@ public class MainActivity extends AppCompatActivity {
     private void validateCouponCode(final String couponCode) {
         backend.validateCoupon(couponCode, new Backend.CouponTransactionResultHandler() {
             @Override
-            public void onCouponValidationResult(boolean isValid, long age) {
+            public void onCouponValidationResult(boolean isValid, long age, long timeStamp) {
                 if (isValid) {
-                    transactionLog.logValidCoupon(couponCode);
+                    transactionLog.logValidCoupon(timeStamp);
                     soundEffects.signalSuccess();
                 } else {
-                    transactionLog.logInvalidCoupon(couponCode, age);
+                    transactionLog.logInvalidCoupon(age, timeStamp );
                     soundEffects.signalError();
                 }
             }
@@ -108,8 +108,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(final View view) {
                 backend.submitCash(new Backend.CashTransactionResultHandler() {
                     @Override
-                    public void onCashTransactionResult(boolean isValid) {
-                        transactionLog.logCash();
+                    public void onCashTransactionResult(long timeStamp) {
+                        transactionLog.logCash(timeStamp);
                     }
 
                     @Override
