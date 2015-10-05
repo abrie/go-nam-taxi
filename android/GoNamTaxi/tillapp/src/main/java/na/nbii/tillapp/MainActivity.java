@@ -74,7 +74,7 @@ public class MainActivity
     }
 
     public void showError(String errorMessage) {
-        View view = findViewById(R.id.listView);
+        View view = findViewById(R.id.content_main);
         Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
     }
