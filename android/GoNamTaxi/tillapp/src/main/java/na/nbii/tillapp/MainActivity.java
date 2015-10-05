@@ -20,18 +20,14 @@ import android.widget.ListView;
 
 import com.google.android.gms.vision.barcode.Barcode;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
-import na.nbii.netcomm.NetMethods;
 import na.nbii.netcomm.NetRequestQueue;
 import vision.BarcodeCaptureActivity;
 
 public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final int RC_BARCODE_CAPTURE = 9001;
-    private NetPath netPath;
+    private Backend backend;
 
     ArrayList<String> listItems=new ArrayList<>();
     ArrayAdapter<String> adapter;
@@ -60,35 +56,23 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         }
 
         if (requestCode == RC_BARCODE_CAPTURE) {
-            NetRequestQueue.getInstance(getApplicationContext())
-                    .addRequest(NetMethods.jsonRequest(
-                            netPath.getUrl("/till/received/coupon/" + netPath.getTaxiNumber() + "/" + rawValue),
-                            new NetMethods.JsonResponseHandler() {
-                                @Override
-                                public void onJson(JSONObject content) {
-                                    boolean isValid;
-                                    try {
-                                        isValid = content.getBoolean("is_valid");
-                                    } catch(JSONException e) {
-                                        isValid = false;
-                                    }
+            backend.validateCoupon(rawValue, new Backend.CouponValidationResultHandler() {
+                @Override
+                public void onCouponValidationResult(boolean isValid) {
+                    if (isValid) {
+                        adapter.insert("Ticket Validated:" + rawValue, 0);
+                        soundPool.play(successSound, 1, 1, 0, 0, 1);
+                    } else {
+                        adapter.insert("TICKET NOT VALID:" + rawValue, 0);
+                        soundPool.play(failureSound, 1, 1, 0, 0, 1);
+                    }
+                }
 
-                                    if (isValid) {
-                                        adapter.insert("Ticket Validated:" + rawValue, 0);
-                                        soundPool.play(successSound, 1, 1, 0, 0, 1);
-                                    }
-                                    else {
-                                        adapter.insert("TICKET NOT VALID:" + rawValue, 0);
-                                        soundPool.play(failureSound, 1, 1, 0, 0, 1);
-                                    }
-                                }
-
-                                @Override
-                                public void onError(String error) {
-                                    ShowError(error);
-                                }
-                            }
-                    ));
+                @Override
+                public void onCouponValidationError(String error) {
+                    ShowError(error);
+                }
+            });
         }
     }
 
@@ -106,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, true);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        netPath = new NetPath(sharedPref);
+        backend = new Backend(NetRequestQueue.getInstance(this), new NetPath(sharedPref));
         sharedPref.registerOnSharedPreferenceChangeListener(this);
         onSharedPreferenceChanged(sharedPref, SettingsActivity.TAXI_NUMBER);
 
@@ -118,21 +102,17 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         cashButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                NetRequestQueue.getInstance(getApplicationContext())
-                        .addRequest(NetMethods.stringRequest(
-                                netPath.getUrl("/till/received/cash/"+netPath.getTaxiNumber()),
-                                new NetMethods.StringResponseHandler() {
-                                    @Override
-                                    public void onString(String content) {
-                                        adapter.insert("cash payment acknowledged", 0);
-                                    }
+                backend.submitCash(new Backend.CashTransactionResultHandler() {
+                    @Override
+                    public void onCashTransactionResult(boolean isValid) {
+                        adapter.insert("cash payment acknowledged", 0);
+                    }
 
-                                    @Override
-                                    public void onError(String error) {
-                                        ShowError(error);
-                                    }
-                                }
-                        ));
+                    @Override
+                    public void onCashTransactionError(String error) {
+                        ShowError(error);
+                    }
+                });
             }
         });
 
@@ -141,17 +121,15 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             @Override
             public void onClick(final View view) {
                 // launch barcode activity.
-                Intent intent = new Intent(getApplication().getApplicationContext(), BarcodeCaptureActivity.class);
-                //intent.putExtra(BarcodeCaptureActivity.AutoFocus, autoFocus.isChecked());
-                //intent.putExtra(BarcodeCaptureActivity.UseFlash, useFlash.isChecked());
+                Intent intent = new Intent(
+                        getApplication().getApplicationContext(),
+                        BarcodeCaptureActivity.class);
                 intent.putExtra(BarcodeCaptureActivity.AutoFocus, true);
                 intent.putExtra(BarcodeCaptureActivity.UseFlash, false);
-
                 startActivityForResult(intent, RC_BARCODE_CAPTURE);
 
             }
         });
-
 
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listItems);
         ListView listView = (ListView) findViewById(R.id.listView);
