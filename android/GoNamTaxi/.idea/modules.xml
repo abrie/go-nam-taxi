@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/GoNamTaxi.iml" filepath="$PROJECT_DIR$/GoNamTaxi.iml" />
       <module fileurl="file://$PROJECT_DIR$/netcomm/netcomm.iml" filepath="$PROJECT_DIR$/netcomm/netcomm.iml" />
-      <module fileurl="file://$PROJECT_DIR$/riderapp/riderapp.iml" filepath="$PROJECT_DIR$/riderapp/riderapp.iml" />
       <module fileurl="file://$PROJECT_DIR$/tillapp/tillapp.iml" filepath="$PROJECT_DIR$/tillapp/tillapp.iml" />
     </modules>
   </component>
