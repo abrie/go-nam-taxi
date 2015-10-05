@@ -1,14 +1,18 @@
 #!/usr/bin/env node
+// Abrie loved this project.
+
 var Dispatch = require('dispatch');
 var Fs = require('fs');
 var Http = require('http');
 var Request = require('request');
-var Secrets = tryRequire('./private/api_keys');
 var ShortId = require('shortid');
 var WebSocketServer = require('ws').Server;
 var Dns = require('dns');
 var Os = require('os');
 var Moment = require('moment');
+
+var Secrets = tryRequire('./private/api_keys');
+var Tickets = tryRequire("./tickets/table");
 
 var socketServer = new WebSocketServer({ port:9090 });
 var clientManager = new ClientManager();
@@ -179,18 +183,10 @@ function Client(socket) {
 }
 
 function TransactionManager() {
-    var tickets = {
-        "a-1":true,
-        "b-2":true,
-        "c-3":true,
-        "d-4":true,
-        "e-5":true
-    }
-
     function transact(code) {
-        var isValid = tickets[code];
+        var isValid = Tickets[code];
         if (isValid) {
-            tickets[code] = false;
+            Tickets[code] = false;
             return true;
         }
         else {
