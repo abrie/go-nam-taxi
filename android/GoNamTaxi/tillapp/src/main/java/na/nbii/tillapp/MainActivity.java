@@ -11,13 +11,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
 import com.google.android.gms.vision.barcode.Barcode;
-
-import java.util.ArrayList;
 
 import backend.Backend;
 import backend.PathBuilder;
@@ -29,10 +26,8 @@ public class MainActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private Backend backend;
+    private TransactionLog transactionLog;
     private SoundEffects soundEffects;
-
-    ArrayList<String> listItems=new ArrayList<>();
-    ArrayAdapter<String> adapter;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -52,17 +47,17 @@ public class MainActivity
             @Override
             public void onCouponValidationResult(boolean isValid) {
                 if (isValid) {
-                    adapter.insert("Ticket Validated:" + couponCode, 0);
+                    transactionLog.logValidCoupon(couponCode);
                     soundEffects.signalSuccess();
                 } else {
-                    adapter.insert("TICKET NOT VALID:" + couponCode, 0);
+                    transactionLog.logInvalidCoupon(couponCode);
                     soundEffects.signalError();
                 }
             }
 
             @Override
             public void onCouponValidationError(String error) {
-                ShowError(error);
+                showError(error);
             }
         });
     }
@@ -78,7 +73,7 @@ public class MainActivity
         }
     }
 
-    public void ShowError(String errorMessage) {
+    public void showError(String errorMessage) {
         View view = findViewById(R.id.listView);
         Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
@@ -92,11 +87,15 @@ public class MainActivity
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, true);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        backend = new Backend(NetRequestQueue.getInstance(this), new PathBuilder(sharedPref));
         sharedPref.registerOnSharedPreferenceChangeListener(this);
         onSharedPreferenceChanged(sharedPref, SettingsActivity.TAXI_NUMBER);
 
+        backend = new Backend(NetRequestQueue.getInstance(this), new PathBuilder(sharedPref));
         soundEffects = new SoundEffects(this);
+        transactionLog = new TransactionLog(this);
+
+        ListView listView = (ListView) findViewById(R.id.listView);
+        listView.setAdapter(transactionLog.getAdapter());
 
         Button cashButton = (Button)findViewById(R.id.btn_pay_cash);
         cashButton.setOnClickListener(new View.OnClickListener() {
@@ -105,12 +104,12 @@ public class MainActivity
                 backend.submitCash(new Backend.CashTransactionResultHandler() {
                     @Override
                     public void onCashTransactionResult(boolean isValid) {
-                        adapter.insert("cash payment acknowledged", 0);
+                        transactionLog.logCash();
                     }
 
                     @Override
                     public void onCashTransactionError(String error) {
-                        ShowError(error);
+                        showError(error);
                     }
                 });
             }
@@ -130,10 +129,6 @@ public class MainActivity
 
             }
         });
-
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listItems);
-        ListView listView = (ListView) findViewById(R.id.listView);
-        listView.setAdapter(adapter);
     }
 
     private void setToolbarTitle(String taxiNumber) {
