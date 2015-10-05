@@ -61,7 +61,7 @@ function processCouponPayment(req, res, taxi_id, code, lon, lat) {
     var json = JSON.stringify({
         "content":"coupon payment acknowledged",
         "taxi_id":taxi_id,
-        "ticket_payment":code,
+        "ticket_payment":"ticket id-"+code,
         "time": lastScan,
         "age": transactionManager.age(code),
         "longitude": lon,
