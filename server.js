@@ -12,11 +12,11 @@ var Os = require('os');
 var Util = require('./util');
 var Admin = require('./admin');
 var Secrets = Util.tryRequire('./private/api_keys');
-var Tickets = Util.tryRequire("./tickets/table");
+var TicketTracker = require('./tickettracker.js');
 
 var socketServer = new WebSocketServer({ port:9090 });
 var clientManager = new Admin.ClientManager();
-var transactionManager = new TransactionManager();
+var transactionManager = new TicketTracker.TransactionManager();
 
 socketServer.on('connection', function(socket) {
     var client = clientManager.addSocket(socket);
@@ -101,36 +101,6 @@ function serve500(req, res) {
     res.writeHead(500, {'Content-Type': 'text/html'});
     res.write("there was a server error.");
     res.end();
-}
-
-function TransactionManager() {
-    function transact(code) {
-        var lastScan = Tickets[code];
-        if (lastScan === 0) {
-            Tickets[code] = Date.now();
-            return 0;
-        }
-        return lastScan;
-    }
-
-    function age(code) {
-        if (Tickets[code] !== 0) {
-            return Date.now() - Tickets[code];
-        }
-        else {
-            return 0;
-        }
-    }
-
-    function transactionTimestamp(code) {
-        return Tickets[code];
-    }
-
-    return {
-        transact: transact,
-        transactionTimestamp: transactionTimestamp,
-        age: age
-    }
 }
 
 
