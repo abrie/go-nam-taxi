@@ -2,7 +2,7 @@ package backend;
 
 import android.content.SharedPreferences;
 
-import na.nbii.tillapp.SettingsActivity;
+import tillapp.SettingsActivity;
 
 /**
  * Created by abrie on 15-10-03.

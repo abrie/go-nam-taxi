@@ -1,4 +1,4 @@
-package na.nbii.tillapp;
+package tillapp;
 
 import android.content.Context;
 import android.widget.ArrayAdapter;

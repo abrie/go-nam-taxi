@@ -13,7 +13,7 @@
         android:screenOrientation="portrait"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
+            android:name="tillapp.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
@@ -26,7 +26,7 @@
             android:name="vision.BarcodeCaptureActivity"
             android:label="Read Barcode" />
         <activity
-            android:name="na.nbii.tillapp.SettingsActivity"
+            android:name="tillapp.SettingsActivity"
             android:label="Preferences">
         </activity>
     </application>

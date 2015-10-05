@@ -1,4 +1,4 @@
-package na.nbii.tillapp;
+package tillapp;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,6 +19,7 @@ import com.google.android.gms.vision.barcode.Barcode;
 import backend.Backend;
 import backend.PathBuilder;
 import na.nbii.netcomm.NetRequestQueue;
+import na.nbii.tillapp.R;
 import vision.BarcodeCaptureActivity;
 
 public class MainActivity
@@ -160,7 +161,7 @@ public class MainActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent intent = new Intent();
-            intent.setClassName(this, "na.nbii.tillapp.SettingsActivity");
+            intent.setClassName(this, "SettingsActivity");
             startActivity(intent);
             return true;
         }

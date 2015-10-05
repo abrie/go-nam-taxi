@@ -1,9 +1,11 @@
-package na.nbii.tillapp;
+package tillapp;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+
+import na.nbii.tillapp.R;
 
 /**
  * Created by abrie on 15-10-03.

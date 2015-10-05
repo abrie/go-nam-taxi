@@ -1,8 +1,10 @@
-package na.nbii.tillapp;
+package tillapp;
 
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.SoundPool;
+
+import na.nbii.tillapp.R;
 
 /**
  * Created by abrie on 15-10-04.

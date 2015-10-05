@@ -1,4 +1,4 @@
-package na.nbii.tillapp;
+package tillapp;
 
 import android.app.Activity;
 import android.os.Bundle;
