@@ -5,20 +5,21 @@ var Dispatch = require('dispatch');
 var Fs = require('fs');
 var Http = require('http');
 var Request = require('request');
-var ShortId = require('shortid');
 var WebSocketServer = require('ws').Server;
 var Dns = require('dns');
 var Os = require('os');
 
-var Secrets = tryRequire('./private/api_keys');
-var Tickets = tryRequire("./tickets/table");
+var Util = require('./util');
+var Admin = require('./admin');
+var Secrets = Util.tryRequire('./private/api_keys');
+var Tickets = Util.tryRequire("./tickets/table");
 
 var socketServer = new WebSocketServer({ port:9090 });
-var clientManager = new ClientManager();
+var clientManager = new Admin.ClientManager();
 var transactionManager = new TransactionManager();
 
 socketServer.on('connection', function(socket) {
-    var client = clientManager.add(new Client(socket));
+    var client = clientManager.add(new Admin.Client(socket));
 
     socket.on('close', function() { 
         clientManager.remove(client); 
@@ -102,91 +103,6 @@ function serve500(req, res) {
     res.end();
 }
 
-function tryRequire(path) {
-    try {
-        return require(path);
-    }
-    catch (e) {
-        console.log("FATAL: error while trying to require %s", path);
-        console.log(e);
-        process.exit(1);
-    }
-}
-
-function Client(socket) {
-    var state = {
-        socket: socket,
-        clientId: ShortId.generate(),
-    }
-
-    var methods = {
-        init: init,
-        dispose: dispose,
-        sendHello: sendHello,
-        sendMessage: sendMessage,
-    }
-
-    function ackHandler(error) {
-        if (error) {
-            console.log(error);
-        }
-    }
-
-    function sendHello() {
-        var raw = JSON.stringify({
-            type: 0,
-            clientId: state.clientId, 
-            google_maps_browser_key: Secrets.google_maps_browser_key,
-        });
-
-        socket.send(raw, ackHandler);
-    }
-
-    function sendMessage(message) {
-        var raw = JSON.stringify({
-            type: 1, 
-            clientId: state.clientId, 
-            content: message
-        });
-
-        socket.send(raw, ackHandler);
-    }
-
-    function sendSnappedPoints(snappedPoints) {
-        var raw = JSON.stringify({
-            type: 2,
-            clientId: state.clientId,
-            content: snappedPoints
-        });
-
-        socket.send(raw, ackHandler);
-    }
-
-    function receiveMessage(message) {
-        json = JSON.parse(message); 
-        if (json.path) {
-            snapToRoads(json.path, function(err, response) {
-                if (response) {
-                    sendSnappedPoints(response.snappedPoints);
-                }
-            });
-        }
-    }
-
-    function init() {
-        socket.on('message', receiveMessage);
-        console.log("new client: %s", state.clientId);
-        sendHello();
-        return this;
-    }
-
-    function dispose() {
-        console.log("bye client: %s", state.clientId);
-    }
-
-    return methods;
-}
-
 function TransactionManager() {
     function transact(code) {
         var lastScan = Tickets[code];
@@ -217,33 +133,6 @@ function TransactionManager() {
     }
 }
 
-function ClientManager() {
-    var clients = [];
-    var updateCounter = 0;
-
-    function add(client) {
-        clients.push(client);
-        return client.init();
-    }
-
-    function remove(client) {
-        var index = clients.indexOf(client);
-        clients.splice(index, 1);
-        client.dispose();
-    }
-
-    function broadcast(message) {
-        clients.forEach( function(client) {
-            client.sendMessage(message);
-        });
-    }
-
-    return {
-        add: add,
-        remove: remove,
-        broadcast: broadcast
-    }
-}
 
 function buildRequest(baseUrl, params) {
     var result = undefined;
