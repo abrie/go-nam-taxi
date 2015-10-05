@@ -7,7 +7,7 @@ import na.nbii.tillapp.SettingsActivity;
 /**
  * Created by abrie on 15-10-03.
  */
-public class NetPath implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class PathBuilder implements SharedPreferences.OnSharedPreferenceChangeListener {
     private String baseUrl = "http://undefined:xxxx";
     private String serverAddress;
     private String serverPort;
@@ -17,7 +17,7 @@ public class NetPath implements SharedPreferences.OnSharedPreferenceChangeListen
         return String.format("%s%s", baseUrl, path);
     }
 
-    public NetPath(SharedPreferences preferences) {
+    public PathBuilder(SharedPreferences preferences) {
         onSharedPreferenceChanged(preferences, SettingsActivity.SERVER_ADDRESS);
         onSharedPreferenceChanged(preferences, SettingsActivity.SERVER_PORT);
         onSharedPreferenceChanged(preferences, SettingsActivity.TAXI_NUMBER);

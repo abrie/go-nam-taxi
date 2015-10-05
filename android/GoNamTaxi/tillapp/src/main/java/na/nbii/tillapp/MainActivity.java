@@ -3,8 +3,6 @@ package na.nbii.tillapp;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.media.AudioManager;
-import android.media.SoundPool;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
@@ -23,19 +21,18 @@ import com.google.android.gms.vision.barcode.Barcode;
 import java.util.ArrayList;
 
 import backend.Backend;
-import backend.NetPath;
+import backend.PathBuilder;
 import na.nbii.netcomm.NetRequestQueue;
 import vision.BarcodeCaptureActivity;
 
 public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final int RC_BARCODE_CAPTURE = 9001;
     private Backend backend;
+    private SoundEffects soundEffects;
 
     ArrayList<String> listItems=new ArrayList<>();
     ArrayAdapter<String> adapter;
-    SoundPool soundPool;
-    int successSound;
-    int failureSound;
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -63,10 +60,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 public void onCouponValidationResult(boolean isValid) {
                     if (isValid) {
                         adapter.insert("Ticket Validated:" + rawValue, 0);
-                        soundPool.play(successSound, 1, 1, 0, 0, 1);
+                        soundEffects.signalSuccess();
                     } else {
                         adapter.insert("TICKET NOT VALID:" + rawValue, 0);
-                        soundPool.play(failureSound, 1, 1, 0, 0, 1);
+                        soundEffects.signalError();
                     }
                 }
 
@@ -92,13 +89,11 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, true);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        backend = new Backend(NetRequestQueue.getInstance(this), new NetPath(sharedPref));
+        backend = new Backend(NetRequestQueue.getInstance(this), new PathBuilder(sharedPref));
         sharedPref.registerOnSharedPreferenceChangeListener(this);
         onSharedPreferenceChanged(sharedPref, SettingsActivity.TAXI_NUMBER);
 
-        soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
-        failureSound = soundPool.load(this, R.raw.failure, 1);
-        successSound = soundPool.load(this, R.raw.success, 2);
+        soundEffects = new SoundEffects(this);
 
         Button cashButton = (Button)findViewById(R.id.btn_pay_cash);
         cashButton.setOnClickListener(new View.OnClickListener() {

@@ -11,7 +11,7 @@ import na.nbii.netcomm.NetRequestQueue;
  */
 public class Backend {
     private NetRequestQueue requestQueue;
-    private NetPath netPath;
+    private PathBuilder pathBuilder;
 
     public interface CouponTransactionResultHandler {
         void onCouponValidationResult(boolean isValid);
@@ -23,14 +23,14 @@ public class Backend {
         void onCashTransactionError(String error);
     }
 
-    public Backend(NetRequestQueue netRequestQueue, NetPath netPath) {
+    public Backend(NetRequestQueue netRequestQueue, PathBuilder pathBuilder) {
         this.requestQueue = netRequestQueue;
-        this.netPath = netPath;
+        this.pathBuilder = pathBuilder;
     }
 
     public void validateCoupon(String rawValue, final CouponTransactionResultHandler handler) {
         requestQueue.addRequest(NetMethods.jsonRequest(
-                netPath.getUrl("/till/received/coupon/" + netPath.getTaxiNumber() + "/" + rawValue),
+                pathBuilder.getUrl("/till/received/coupon/" + pathBuilder.getTaxiNumber() + "/" + rawValue),
                 new NetMethods.JsonResponseHandler() {
                     @Override
                     public void onJson(JSONObject content) {
@@ -52,7 +52,7 @@ public class Backend {
 
     public void submitCash(final CashTransactionResultHandler handler) {
         requestQueue.addRequest(NetMethods.stringRequest(
-                netPath.getUrl("/till/received/cash/" + netPath.getTaxiNumber()),
+                pathBuilder.getUrl("/till/received/cash/" + pathBuilder.getTaxiNumber()),
                 new NetMethods.StringResponseHandler() {
                     @Override
                     public void onString(String content) {
