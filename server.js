@@ -28,7 +28,7 @@ socketServer.on('connection', function(socket) {
 var server = Http.createServer(
     Dispatch({
         '/till/received/cash/:id': processCashPayment,
-        '/till/received/coupon/:id/:code': processCouponPayment,
+        '/till/received/coupon/:id/:code/:lat/:lon': processCouponPayment,
         '/client': serveClient,
         '.*': serve404
     })
@@ -51,9 +51,10 @@ function processCashPayment(req, res, taxi_id) {
     clientManager.broadcast(json)
 }
 
-function processCouponPayment(req, res, taxi_id, code) {
+function processCouponPayment(req, res, taxi_id, code, lat, lon) {
     var lastScan = transactionManager.transact(code);
     console.log("till %s received coupon: %s : %s", taxi_id, code, lastScan);
+    console.log(lat, lon);
 
     var json = JSON.stringify({
         "content":"coupon payment acknowledged",
@@ -61,6 +62,8 @@ function processCouponPayment(req, res, taxi_id, code) {
         "ticket_payment":code,
         "time": lastScan,
         "age": transactionManager.age(code),
+        "longitude": lon,
+        "latitude": lat,
         "is_valid": lastScan === 0,
     });
 

@@ -1,5 +1,7 @@
 package backend;
 
+import android.location.Location;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,6 +14,14 @@ import na.nbii.netcomm.NetRequestQueue;
 public class Backend {
     private final NetRequestQueue requestQueue;
     private final PathBuilder pathBuilder;
+
+    private double positon_lon;
+    private double position_lat;
+
+    public void setLocation(Location location) {
+        this.positon_lon = location.getLongitude();
+        this.position_lat = location.getLatitude();
+    }
 
     public interface CouponTransactionResultHandler {
         void onCouponValidationResult(boolean isValid, long age, long timeStamp);
@@ -32,7 +42,7 @@ public class Backend {
 
     public void validateCoupon(String rawValue, final CouponTransactionResultHandler handler) {
         requestQueue.addRequest(NetMethods.jsonRequest(
-                pathBuilder.getUrl("/till/received/coupon/" + pathBuilder.getTaxiNumber() + "/" + rawValue),
+                pathBuilder.couponUrl(rawValue, positon_lon, position_lat),
                 new NetMethods.JsonResponseHandler() {
                     @Override
                     public void onJson(JSONObject content) {

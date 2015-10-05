@@ -1,13 +1,18 @@
 package tillapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,6 +44,26 @@ public class MainActivity extends AppCompatActivity {
                 validateCouponCode(couponCode);
             }
         }
+    }
+
+    private void startLocationListener() {
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
+        LocationListener locationListener = new LocationListener() {
+            public void onLocationChanged(Location location) {
+                // Called when a new location is found by the network location provider.
+                Log.i("TillApp",location.toString());
+                backend.setLocation(location);
+            }
+
+            public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+            public void onProviderEnabled(String provider) {}
+
+            public void onProviderDisabled(String provider) {}
+        };
+
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
     }
 
     private void validateCouponCode(final String couponCode) {
@@ -91,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
         backend = new Backend(NetRequestQueue.getInstance(this), new PathBuilder(sharedPref));
         soundEffects = new SoundEffects(this);
         transactionLog = new TransactionLog(this);
+        startLocationListener();
 
         connectListview();
         connectButtons();

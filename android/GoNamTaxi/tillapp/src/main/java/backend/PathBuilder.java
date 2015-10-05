@@ -17,6 +17,11 @@ public class PathBuilder implements SharedPreferences.OnSharedPreferenceChangeLi
         return String.format("%s%s", baseUrl, path);
     }
 
+    public String couponUrl(String rawValue, double lon, double lat) {
+        return getUrl(String.format(
+                "/till/received/coupon/%s/%s/%f/%f", taxiNumber, rawValue, lon, lat));
+    }
+
     public PathBuilder(SharedPreferences preferences) {
         onSharedPreferenceChanged(preferences, SettingsActivity.SERVER_ADDRESS);
         onSharedPreferenceChanged(preferences, SettingsActivity.SERVER_PORT);

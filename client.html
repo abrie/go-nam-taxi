@@ -48,7 +48,8 @@
                 <td id="transactions-header-timestamp">Timestamp</td>
                 <td id="transactions-header-taxi-id">Taxi Id</td>
                 <td id="transactions-header-payment">Payment Type</td>
-                <td id="transactions-header-validated">Valid?</td>
+                <td id="transactions-header-validated">Valid</td>
+                <td id="transactions-header-coordinate">Where</td>
             </tr>
         </table>
     </div>
@@ -109,6 +110,12 @@
                     validIndicator.className = "invalid";
                 }
                 tr.appendChild(validIndicator);
+
+
+                var lat = json.latitude;
+                var lon = json.longitude;
+                var latlon = createTd("("+lat+","+lon+")");
+                tr.appendChild(latlon);
 
             }
 
