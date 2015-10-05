@@ -27,12 +27,12 @@ public class TransactionLog {
 
     public void logValidCoupon(long timeStamp) {
         String timeString  = dateFormat.format(new Date(timeStamp));
-        adapter.insert(String.format("%s:Ticket Validated:", timeString), 0);
+        adapter.insert(String.format("%s:Ticket Valid.", timeString), 0);
     }
 
     public void logInvalidCoupon(long age, long timeStamp) {
         String timeString  = dateFormat.format(new Date(timeStamp));
-        String message = String.format("%s:Ticket Invalid: was used %s", timeString, formatAge(age));
+        String message = String.format("%s:Ticket Invalid, was used %s", timeString, formatAge(age));
         adapter.insert(message, 0);
     }
 
