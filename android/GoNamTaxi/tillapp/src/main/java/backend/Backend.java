@@ -14,7 +14,7 @@ public class Backend {
     private PathBuilder pathBuilder;
 
     public interface CouponTransactionResultHandler {
-        void onCouponValidationResult(boolean isValid);
+        void onCouponValidationResult(boolean isValid, long age);
         void onCouponValidationError(String error);
     }
 
@@ -34,13 +34,13 @@ public class Backend {
                 new NetMethods.JsonResponseHandler() {
                     @Override
                     public void onJson(JSONObject content) {
-                        boolean isValid;
                         try {
-                            isValid = content.getBoolean("is_valid");
+                            boolean isValid = content.getBoolean("is_valid");
+                            long age = content.getLong("age");
+                            handler.onCouponValidationResult(isValid, age);
                         } catch (JSONException e) {
-                            isValid = false;
+                            handler.onCouponValidationError("failed to parse JSON");
                         }
-                        handler.onCouponValidationResult(isValid);
                     }
 
                     @Override

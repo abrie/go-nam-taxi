@@ -46,12 +46,12 @@ public class MainActivity
     private void validateCouponCode(final String couponCode) {
         backend.validateCoupon(couponCode, new Backend.CouponTransactionResultHandler() {
             @Override
-            public void onCouponValidationResult(boolean isValid) {
+            public void onCouponValidationResult(boolean isValid, long age) {
                 if (isValid) {
                     transactionLog.logValidCoupon(couponCode);
                     soundEffects.signalSuccess();
                 } else {
-                    transactionLog.logInvalidCoupon(couponCode);
+                    transactionLog.logInvalidCoupon(couponCode, age);
                     soundEffects.signalError();
                 }
             }

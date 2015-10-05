@@ -9,7 +9,6 @@ var ShortId = require('shortid');
 var WebSocketServer = require('ws').Server;
 var Dns = require('dns');
 var Os = require('os');
-var Moment = require('moment');
 
 var Secrets = tryRequire('./private/api_keys');
 var Tickets = tryRequire("./tickets/table");
@@ -41,7 +40,7 @@ function processCashPayment(req, res, taxi_id) {
         "content":"cash payment acknowledged",
         "taxi_id":taxi_id,
         "cash_payment":"cash payment",
-        "time": Moment.utc(),
+        "time": Date.now(),
         "is_valid":"n/a",
     });
 
@@ -53,15 +52,16 @@ function processCashPayment(req, res, taxi_id) {
 }
 
 function processCouponPayment(req, res, taxi_id, code) {
-    var isValid = transactionManager.transact(code);
-    console.log("till %s received coupon: %s :", taxi_id, code, isValid);
+    var lastScan = transactionManager.transact(code);
+    console.log("till %s received coupon: %s : %s", taxi_id, code, lastScan);
 
     var json = JSON.stringify({
         "content":"coupon payment acknowledged",
         "taxi_id":taxi_id,
         "ticket_payment":code,
-        "time": Moment.utc(),
-        "is_valid": isValid
+        "time": lastScan,
+        "age": transactionManager.age(code),
+        "is_valid": lastScan === 0,
     });
 
     res.writeHead(200, {'Content-Type': 'text/html'});
@@ -184,18 +184,26 @@ function Client(socket) {
 
 function TransactionManager() {
     function transact(code) {
-        var isValid = Tickets[code];
-        if (isValid) {
-            Tickets[code] = false;
-            return true;
+        var lastScan = Tickets[code];
+        if (lastScan === 0) {
+            Tickets[code] = Date.now();
+            return 0;
+        }
+        return lastScan;
+    }
+
+    function age(code) {
+        if (Tickets[code] !== 0) {
+            return Date.now() - Tickets[code];
         }
         else {
-            return false;
+            return 0;
         }
     }
 
     return {
-        transact: transact
+        transact: transact,
+        age: age
     }
 }
 
