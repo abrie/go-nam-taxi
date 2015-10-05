@@ -91,8 +91,9 @@
 
         function handleMessage(up) {
             var json = JSON.parse(up.content);
+            var table = document.getElementById("transactions-table");
             if (json.taxi_id) {
-                var tr = document.createElement("tr");
+                var tr = table.insertRow(1);
                 tr.appendChild( createTd(json.time) );
                 tr.appendChild( createTd(json.taxi_id) );
 
@@ -109,8 +110,6 @@
                 }
                 tr.appendChild(validIndicator);
 
-                var table = document.getElementById("transactions-table");
-                table.appendChild(tr);
             }
 
 
