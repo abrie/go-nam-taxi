@@ -8,7 +8,6 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,45 +32,47 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     ArrayList<String> listItems=new ArrayList<>();
     ArrayAdapter<String> adapter;
 
-
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
 
-        if (data == null) {
-            Log.e("TillApp","Null Intent returned to onActivityResult");
-            return;
+        if (intent != null && requestCode == RC_BARCODE_CAPTURE) {
+            final Bundle bundle = intent.getExtras();
+            final String couponCode = getRawBarcodeContents(bundle);
+            if (couponCode != null) {
+                validateCouponCode(couponCode);
+            }
         }
+    }
 
-        Bundle bundle = data.getExtras();
+    private void validateCouponCode(final String couponCode) {
+        backend.validateCoupon(couponCode, new Backend.CouponTransactionResultHandler() {
+            @Override
+            public void onCouponValidationResult(boolean isValid) {
+                if (isValid) {
+                    adapter.insert("Ticket Validated:" + couponCode, 0);
+                    soundEffects.signalSuccess();
+                } else {
+                    adapter.insert("TICKET NOT VALID:" + couponCode, 0);
+                    soundEffects.signalError();
+                }
+            }
+
+            @Override
+            public void onCouponValidationError(String error) {
+                ShowError(error);
+            }
+        });
+    }
+
+    public String getRawBarcodeContents(Bundle bundle) {
         Barcode barcode = (Barcode) bundle.get(BarcodeCaptureActivity.BarcodeObject);
-        final String rawValue;
-        
+
         if (barcode != null) {
-            rawValue = barcode.rawValue;
+            return barcode.rawValue;
         }
         else {
-            rawValue = "error in barcode";
-        }
-
-        if (requestCode == RC_BARCODE_CAPTURE) {
-            backend.validateCoupon(rawValue, new Backend.CouponTransactionResultHandler() {
-                @Override
-                public void onCouponValidationResult(boolean isValid) {
-                    if (isValid) {
-                        adapter.insert("Ticket Validated:" + rawValue, 0);
-                        soundEffects.signalSuccess();
-                    } else {
-                        adapter.insert("TICKET NOT VALID:" + rawValue, 0);
-                        soundEffects.signalError();
-                    }
-                }
-
-                @Override
-                public void onCouponValidationError(String error) {
-                    ShowError(error);
-                }
-            });
+            return null;
         }
     }
 
