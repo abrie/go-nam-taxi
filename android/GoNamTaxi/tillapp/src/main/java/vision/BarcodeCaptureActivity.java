@@ -1,7 +1,7 @@
 package vision;
 
 /**
- * Created by abrie on 15-10-03.
+ * Pasted by abrie on 15-10-03.
  */
 
 import android.Manifest;
@@ -41,11 +41,16 @@ import na.nbii.tillapp.R;
  * rear facing camera. During detection overlay graphics are drawn to indicate the position,
  * size, and ID of each barcode.
  */
-public final class BarcodeCaptureActivity extends AppCompatActivity implements BarcodeTrackerFactory.BarcodeTrackEventHandler {
+public final class BarcodeCaptureActivity
+        extends AppCompatActivity
+        implements BarcodeTrackerFactory.BarcodeTrackEventHandler {
+
     private static final String TAG = "Barcode-reader";
 
     // intent request code to handle updating play services if needed.
     private static final int RC_HANDLE_GMS = 9001;
+
+    public static final int RC_BARCODE_CAPTURE = 9001;
 
     // permission request codes need to be < 256
     private static final int RC_HANDLE_CAMERA_PERM = 2;

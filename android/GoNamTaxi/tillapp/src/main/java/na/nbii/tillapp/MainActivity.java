@@ -24,8 +24,10 @@ import backend.PathBuilder;
 import na.nbii.netcomm.NetRequestQueue;
 import vision.BarcodeCaptureActivity;
 
-public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
-    private static final int RC_BARCODE_CAPTURE = 9001;
+public class MainActivity
+        extends AppCompatActivity
+        implements SharedPreferences.OnSharedPreferenceChangeListener {
+
     private Backend backend;
     private SoundEffects soundEffects;
 
@@ -36,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
 
-        if (intent != null && requestCode == RC_BARCODE_CAPTURE) {
+        if (intent != null && requestCode == BarcodeCaptureActivity.RC_BARCODE_CAPTURE) {
             final Bundle bundle = intent.getExtras();
             final String couponCode = getRawBarcodeContents(bundle);
             if (couponCode != null) {
@@ -124,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                         BarcodeCaptureActivity.class);
                 intent.putExtra(BarcodeCaptureActivity.AutoFocus, true);
                 intent.putExtra(BarcodeCaptureActivity.UseFlash, false);
-                startActivityForResult(intent, RC_BARCODE_CAPTURE);
+                startActivityForResult(intent, BarcodeCaptureActivity.RC_BARCODE_CAPTURE);
 
             }
         });
