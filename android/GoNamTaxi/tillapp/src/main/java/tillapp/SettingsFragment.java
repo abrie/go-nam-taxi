@@ -35,7 +35,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         }
         else if (key.equals(SettingsActivity.TAXI_NUMBER)) {
             Preference username = findPreference(key);
-            username.setSummary(sharedPreferences.getString(key, randomTaxiNumber()));
+            username.setSummary(sharedPreferences.getString(key, "undefined"));
         }
     }
 

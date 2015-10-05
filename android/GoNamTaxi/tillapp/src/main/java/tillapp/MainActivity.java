@@ -22,9 +22,7 @@ import na.nbii.netcomm.NetRequestQueue;
 import na.nbii.tillapp.R;
 import vision.BarcodeCaptureActivity;
 
-public class MainActivity
-        extends AppCompatActivity
-        implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class MainActivity extends AppCompatActivity {
 
     private Backend backend;
     private TransactionLog transactionLog;
@@ -88,8 +86,7 @@ public class MainActivity
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        sharedPref.registerOnSharedPreferenceChangeListener(this);
-        onSharedPreferenceChanged(sharedPref, SettingsActivity.TAXI_NUMBER);
+        setToolbarTitle();
 
         backend = new Backend(NetRequestQueue.getInstance(this), new PathBuilder(sharedPref));
         soundEffects = new SoundEffects(this);
@@ -132,8 +129,8 @@ public class MainActivity
         });
     }
 
-    private void setToolbarTitle(String taxiNumber) {
-        String completeTitle = String.format("Till for Taxi: %s", taxiNumber);
+    private void setToolbarTitle() {
+        String completeTitle = String.format("Till for Taxi");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -167,13 +164,5 @@ public class MainActivity
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(SettingsActivity.TAXI_NUMBER)) {
-            String taxiNumber = sharedPreferences.getString(key, SettingsFragment.randomTaxiNumber());
-            setToolbarTitle(taxiNumber);
-        }
     }
 }
