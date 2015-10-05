@@ -34,14 +34,16 @@ var server = Http.createServer(
     })
 );
 
-function processCashPayment(req, res, taxi_id) {
+function processCashPayment(req, res, taxi_id, lon, lat) {
     console.log("till %s received cash.", taxi_id);
     var json = JSON.stringify({
         "content":"cash payment acknowledged",
         "taxi_id":taxi_id,
-        "cash_payment":"cash payment",
+        "cash_payment":"cash",
         "time": Date.now(),
-        "is_valid":"n/a",
+        "longitude": lon,
+        "latitude": lat,
+        "is_valid":"---",
     });
 
     res.writeHead(200, {'Content-Type': 'text/html'});
