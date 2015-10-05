@@ -33,8 +33,12 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         }
         else if (key.equals(SettingsActivity.TAXI_NUMBER)) {
             Preference username = findPreference(key);
-            username.setSummary(sharedPreferences.getString(key, "WHK-1"));
+            username.setSummary(sharedPreferences.getString(key, randomTaxiNumber()));
         }
+    }
+
+    static public String randomTaxiNumber() {
+        return String.format("WHK-%d",Math.round(Math.random()*999));
     }
 
     @Override

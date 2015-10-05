@@ -85,7 +85,7 @@ public class MainActivity
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, true);
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPref.registerOnSharedPreferenceChangeListener(this);
         onSharedPreferenceChanged(sharedPref, SettingsActivity.TAXI_NUMBER);
@@ -132,7 +132,7 @@ public class MainActivity
     }
 
     private void setToolbarTitle(String taxiNumber) {
-        String completeTitle = String.format("Till for Taxi %s", taxiNumber);
+        String completeTitle = String.format("Till for Taxi: %s", taxiNumber);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -171,7 +171,7 @@ public class MainActivity
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(SettingsActivity.TAXI_NUMBER)) {
-            String taxiNumber = sharedPreferences.getString(key, "undefined");
+            String taxiNumber = sharedPreferences.getString(key, SettingsFragment.randomTaxiNumber());
             setToolbarTitle(taxiNumber);
         }
     }

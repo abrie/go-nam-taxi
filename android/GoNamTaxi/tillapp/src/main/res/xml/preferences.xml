@@ -10,8 +10,7 @@
     android:defaultValue="8080" />
 <EditTextPreference
     android:key="pref_taxi_number"
-    android:title="@string/taxi_number"
-    android:defaultValue="whk-1" />
+    android:title="@string/taxi_number" />
 
 
 
