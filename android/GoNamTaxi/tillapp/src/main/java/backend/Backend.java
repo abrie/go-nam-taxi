@@ -65,7 +65,7 @@ public class Backend {
 
     public void submitCash(final CashTransactionResultHandler handler) {
         requestQueue.addRequest(NetMethods.jsonRequest(
-                pathBuilder.getUrl("/till/received/cash/" + pathBuilder.getTaxiNumber()),
+                pathBuilder.cashUrl(positon_lon, position_lat),
                 new NetMethods.JsonResponseHandler() {
                     @Override
                     public void onJson(JSONObject content) {

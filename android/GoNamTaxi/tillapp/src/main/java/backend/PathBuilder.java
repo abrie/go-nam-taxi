@@ -22,6 +22,10 @@ public class PathBuilder implements SharedPreferences.OnSharedPreferenceChangeLi
                 "/till/received/coupon/%s/%s/%f/%f", taxiNumber, rawValue, lon, lat));
     }
 
+    public String cashUrl(double lon, double lat) {
+        return getUrl(String.format("/till/received/cash/%s/%f/%f", taxiNumber, lon, lat));
+    }
+
     public PathBuilder(SharedPreferences preferences) {
         onSharedPreferenceChanged(preferences, SettingsActivity.SERVER_ADDRESS);
         onSharedPreferenceChanged(preferences, SettingsActivity.SERVER_PORT);
