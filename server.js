@@ -19,10 +19,10 @@ var clientManager = new Admin.ClientManager();
 var transactionManager = new TransactionManager();
 
 socketServer.on('connection', function(socket) {
-    var client = clientManager.add(new Admin.Client(socket));
+    var client = clientManager.addSocket(socket);
 
     socket.on('close', function() { 
-        clientManager.remove(client); 
+        clientManager.removeSocket(socket); 
     });
 });
 

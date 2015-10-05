@@ -4,22 +4,28 @@ var Secrets = Util.tryRequire('./private/api_keys');
 
 module.exports = {
     ClientManager:ClientManager,
-    Client:Client
 } 
 
 function ClientManager() {
     var clients = [];
     var updateCounter = 0;
 
-    function add(client) {
+    function addSocket(socket) {
+        var client = new Client(socket);
         clients.push(client);
         return client.init();
     }
 
-    function remove(client) {
-        var index = clients.indexOf(client);
-        clients.splice(index, 1);
-        client.dispose();
+    function removeSocket(socket) {
+        var clients_on_socket = clients.filter(function(client) {
+            return client.getSocket() === socket;
+        });
+
+        clients_on_socket.forEach( function(client) {
+            var index = clients.indexOf(client);
+            clients.splice(index, 1);
+            client.dispose();
+        });
     }
 
     function broadcast(message) {
@@ -29,8 +35,8 @@ function ClientManager() {
     }
 
     return {
-        add: add,
-        remove: remove,
+        addSocket: addSocket,
+        removeSocket: removeSocket,
         broadcast: broadcast
     }
 }
@@ -44,6 +50,7 @@ function Client(socket) {
     var methods = {
         init: init,
         dispose: dispose,
+        getSocket: function() { return state.socket; },
         sendHello: sendHello,
         sendMessage: sendMessage,
     }
