@@ -22,6 +22,8 @@ import com.google.android.gms.vision.barcode.Barcode;
 
 import java.util.ArrayList;
 
+import backend.Backend;
+import backend.NetPath;
 import na.nbii.netcomm.NetRequestQueue;
 import vision.BarcodeCaptureActivity;
 

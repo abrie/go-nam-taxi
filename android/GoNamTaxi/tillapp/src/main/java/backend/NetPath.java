@@ -1,6 +1,8 @@
-package na.nbii.tillapp;
+package backend;
 
 import android.content.SharedPreferences;
+
+import na.nbii.tillapp.SettingsActivity;
 
 /**
  * Created by abrie on 15-10-03.

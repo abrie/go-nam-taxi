@@ -1,4 +1,4 @@
-package na.nbii.tillapp;
+package backend;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,12 +13,12 @@ public class Backend {
     private NetRequestQueue requestQueue;
     private NetPath netPath;
 
-    interface CouponValidationResultHandler {
+    public interface CouponValidationResultHandler {
         void onCouponValidationResult(boolean isValid);
         void onCouponValidationError(String error);
     }
 
-    interface CashTransactionResultHandler {
+    public interface CashTransactionResultHandler {
         void onCashTransactionResult(boolean isValid);
         void onCashTransactionError(String error);
     }
