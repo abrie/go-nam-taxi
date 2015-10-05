@@ -115,12 +115,23 @@
                 var lat = json.latitude;
                 var lon = json.longitude;
                 var latlon = createTd("("+lat+","+lon+")");
+
+                addMarker(lat, lon);
                 tr.appendChild(latlon);
 
             }
 
 
             ui.last_message.innerHTML = JSON.stringify(json);
+        }
+
+        function addMarker(lat, lon) {
+            var coordinate = {lat: Number(lat), lng: Number(lon)};
+            var marker = new google.maps.Marker({
+                position: coordinate,
+                map: state.map.map,
+                title: 'payment'
+            });
         }
 
         function handleSnappedPath(json) {
