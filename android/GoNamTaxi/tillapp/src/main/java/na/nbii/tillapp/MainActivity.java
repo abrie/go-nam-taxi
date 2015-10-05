@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         }
 
         if (requestCode == RC_BARCODE_CAPTURE) {
-            backend.validateCoupon(rawValue, new Backend.CouponValidationResultHandler() {
+            backend.validateCoupon(rawValue, new Backend.CouponTransactionResultHandler() {
                 @Override
                 public void onCouponValidationResult(boolean isValid) {
                     if (isValid) {

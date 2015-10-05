@@ -13,7 +13,7 @@ public class Backend {
     private NetRequestQueue requestQueue;
     private NetPath netPath;
 
-    public interface CouponValidationResultHandler {
+    public interface CouponTransactionResultHandler {
         void onCouponValidationResult(boolean isValid);
         void onCouponValidationError(String error);
     }
@@ -28,7 +28,7 @@ public class Backend {
         this.netPath = netPath;
     }
 
-    public void validateCoupon(String rawValue, final CouponValidationResultHandler handler) {
+    public void validateCoupon(String rawValue, final CouponTransactionResultHandler handler) {
         requestQueue.addRequest(NetMethods.jsonRequest(
                 netPath.getUrl("/till/received/coupon/" + netPath.getTaxiNumber() + "/" + rawValue),
                 new NetMethods.JsonResponseHandler() {
