@@ -11,6 +11,7 @@ var Os = require('os');
 
 var Util = require('./util');
 var Admin = require('./admin');
+var Routes = require('./routes');
 var TicketTracker = require('./tickettracker.js');
 
 var socketServer = new WebSocketServer({ port:9090 });
@@ -25,17 +26,27 @@ socketServer.on('connection', function(socket) {
     });
 });
 
-var cashRequest = new CashRequestHandler();
-var couponRequest = new CouponRequestHandler();
-var adminPageRequest = new AdminPageHandler();
+var routes = new Routes.HandlerTable()
+routes.add(new CashRequestHandler());
+routes.add(new CouponRequestHandler());
+routes.add(new AdminPageHandler()); 
+routes.add(new NotFoundHandler());
 
-var routes = {};
-routes[cashRequest.path] = cashRequest.handler;
-routes[couponRequest.path] = couponRequest.handler;
-routes[adminPageRequest.path] = adminPageRequest.handler;
-routes['.*'] = serve404;
 
-var server = Http.createServer(Dispatch(routes));
+function NotFoundHandler() {
+    var path = ".*";
+
+    function serve404(req, res) {
+        res.writeHead(404, {'Content-Type': 'text/html'});
+        res.write("that does not exist.");
+        res.end();
+    }
+
+    return {
+        path:path,
+        handler: serve404
+    }
+}
 
 function CashRequestHandler() {
     var path = '/till/received/cash/:id/:lon/:lat';
@@ -120,12 +131,6 @@ function AdminPageHandler() {
     }
 }
 
-function serve404(req, res) {
-    res.writeHead(404, {'Content-Type': 'text/html'});
-    res.write("that does not exist.");
-    res.end();
-}
-
 function serve500(req, res) {
     res.writeHead(500, {'Content-Type': 'text/html'});
     res.write("there was a server error.");
@@ -133,6 +138,7 @@ function serve500(req, res) {
 }
 
 function showIpAddress(server) {
+    console.log("#GoNamTaxi Prototype Server");
     Dns.lookup(Os.hostname(), function (err, add, fam) {
         if (err) {
             console.log("Error attempting to discover ip:", err);
@@ -143,6 +149,6 @@ function showIpAddress(server) {
     });
 }
 
-console.log("#GoNamTaxi Prototype Server");
+var server = Http.createServer(Dispatch(routes.handlers));
 server.listen(8080);
 showIpAddress(server);
