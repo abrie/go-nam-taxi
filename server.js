@@ -25,69 +25,99 @@ socketServer.on('connection', function(socket) {
     });
 });
 
-var server = Http.createServer(
-    Dispatch({
-        '/till/received/cash/:id/:lon/:lat': processCashPayment,
-        '/till/received/coupon/:id/:code/:lon/:lat': processCouponPayment,
-        '/client': serveClient,
-        '.*': serve404
-    })
-);
+var cashRequest = new CashRequestHandler();
+var couponRequest = new CouponRequestHandler();
+var adminPageRequest = new AdminPageHandler();
 
-function processCashPayment(req, res, taxi_id, lon, lat) {
-    console.log("till %s received cash.", taxi_id);
-    var json = JSON.stringify({
-        "content":"cash payment acknowledged",
-        "taxi_id":taxi_id,
-        "cash_payment":"cash",
-        "time": Date.now(),
-        "longitude": lon,
-        "latitude": lat,
-        "is_valid":"---",
-    });
+var routes = {};
+routes[cashRequest.path] = cashRequest.handler;
+routes[couponRequest.path] = couponRequest.handler;
+routes[adminPageRequest.path] = adminPageRequest.handler;
+routes['.*'] = serve404;
 
-    res.writeHead(200, {'Content-Type': 'text/html'});
-    res.write(json);
-    res.end();
+var server = Http.createServer(Dispatch(routes));
 
-    clientManager.broadcast(json)
+function CashRequestHandler() {
+    var path = '/till/received/cash/:id/:lon/:lat';
+
+    function handler(req, res, taxi_id, lon, lat) {
+        console.log("till %s received cash.", taxi_id);
+        var json = JSON.stringify({
+            "content":"cash payment acknowledged",
+            "taxi_id":taxi_id,
+            "cash_payment":"cash",
+            "time": Date.now(),
+            "longitude": lon,
+            "latitude": lat,
+            "is_valid":"---",
+        });
+
+        res.writeHead(200, {'Content-Type': 'text/html'});
+        res.write(json);
+        res.end();
+
+        clientManager.broadcast(json)
+    }
+
+    return {
+        path: path,
+        handler: handler
+    }
 }
 
-function processCouponPayment(req, res, taxi_id, code, lon, lat) {
-    var lastScan = transactionManager.transact(code);
-    console.log("till %s received coupon: %s : %s", taxi_id, code, lastScan);
-    console.log(lat, lon);
+function CouponRequestHandler() {
+    var path = '/till/received/coupon/:id/:code/:lon/:lat';
 
-    var json = JSON.stringify({
-        "content":"coupon payment acknowledged",
-        "taxi_id":taxi_id,
-        "ticket_payment":"ticket id-"+code,
-        "time": transactionManager.transactionTimestamp(code),
-        "age": transactionManager.age(code),
-        "longitude": lon,
-        "latitude": lat,
-        "is_valid": lastScan === 0,
-    });
+    function handler(req, res, taxi_id, code, lon, lat) {
+        var lastScan = transactionManager.transact(code);
+        console.log("till %s received coupon: %s : %s", taxi_id, code, lastScan);
+        console.log(lat, lon);
 
-    res.writeHead(200, {'Content-Type': 'text/html'});
-    res.write(json);
-    res.end();
+        var json = JSON.stringify({
+            "content":"coupon payment acknowledged",
+            "taxi_id":taxi_id,
+            "ticket_payment":"ticket id-"+code,
+            "time": transactionManager.transactionTimestamp(code),
+            "age": transactionManager.age(code),
+            "longitude": lon,
+            "latitude": lat,
+            "is_valid": lastScan === 0,
+        });
 
-    clientManager.broadcast(json)
+        res.writeHead(200, {'Content-Type': 'text/html'});
+        res.write(json);
+        res.end();
+
+        clientManager.broadcast(json)
+    }
+
+    return {
+        path: path,
+        handler: handler
+    }
 }
 
-function serveClient(req, res) {
-    Fs.readFile('client.html', 'utf8', function(err, html) {
-        if (err) {
-            serve500(req, res);
-            console.log("%s", err);
-        }
-        else {
-            res.writeHead(200, {'Content-Type': 'text/html'});
-            res.write(html);
-            res.end();
-        }
-    });
+function AdminPageHandler() {
+    var path = '/client';
+
+    function handler(req, res) {
+        Fs.readFile('client.html', 'utf8', function(err, html) {
+            if (err) {
+                serve500(req, res);
+                console.log("%s", err);
+            }
+            else {
+                res.writeHead(200, {'Content-Type': 'text/html'});
+                res.write(html);
+                res.end();
+            }
+        });
+    }
+
+    return {
+        path: path,
+        handler: handler
+    }
 }
 
 function serve404(req, res) {
@@ -101,9 +131,6 @@ function serve500(req, res) {
     res.write("there was a server error.");
     res.end();
 }
-
-
-
 
 function showIpAddress(server) {
     Dns.lookup(Os.hostname(), function (err, add, fam) {
