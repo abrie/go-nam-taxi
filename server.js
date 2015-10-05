@@ -62,7 +62,7 @@ function processCouponPayment(req, res, taxi_id, code, lon, lat) {
         "content":"coupon payment acknowledged",
         "taxi_id":taxi_id,
         "ticket_payment":"ticket id-"+code,
-        "time": lastScan,
+        "time": transactionManager.transactionTimestamp(code),
         "age": transactionManager.age(code),
         "longitude": lon,
         "latitude": lat,
@@ -206,8 +206,13 @@ function TransactionManager() {
         }
     }
 
+    function transactionTimestamp(code) {
+        return Tickets[code];
+    }
+
     return {
         transact: transact,
+        transactionTimestamp: transactionTimestamp,
         age: age
     }
 }
