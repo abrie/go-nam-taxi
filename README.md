@@ -5,7 +5,7 @@ Developed under the team moniker of 'Logic++'
 To develop a fast, friendly, fraud resistant, payment method for transportation in Namibia.
 
 #The plan and final outcome
-The initial designs employed a passenger tracking system coupled to a cash payment counter. This implementation involved computer vision and a machine learning algorithm, requiring only a mobile Android device coupled to our backend system. This approach had to be abandoned due to time constraints and other (uninteresting) issues. The system was then underwent a rapid redesign to scan QR codes as tickets.
+The initial designs employed a passenger tracking system coupled to a cash payment counter. This implementation involved computer vision and a machine learning algorithm, requiring only a mobile Android device coupled to our backend system. This approach had to be abandoned due to time constraints and other (uninteresting) issues. The system then underwent a rapid redesign to scan QR codes as tickets. Note that a 'cash' button remains in the UI, but is essentially vestigial.
 
 The prototype submitted at the hackathon's conclusion consists of two components:
 
