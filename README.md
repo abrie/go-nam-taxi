@@ -1,10 +1,29 @@
-Experimental platform for developing a #GoNamTaxi Hackathon Prototype
+#GoNamTaxi Hackathon Prototype 2015
+Developed under the team moniker of 'Logic++'
 
-#Prerequisites
+#The Challenge
+To develop a fast, friendly, fraud resistant, payment method for transportation in Namibia.
+
+#The plan and final outcome
+The initial designs employed a passenger tracking system coupled to a cash payment counter. This implementation involved computer vision and a machine learning algorithm, requiring only a mobile Android device coupled to our backend system. This approach had to be abandoned due to time constraints and other (uninteresting) issues. The system was then underwent a rapid redesign to scan QR codes as tickets.
+
+The prototype submitted at the hackathon's conclusion consists of two components:
+
+* The Server, providing a ticket transaction API and a web based administration interface.
+* Till for Taxi, an Android app to scan QR Code tickets and log transactions with GPS coordinates.
+
+###Admin Interface
+[<img src="README.images/admin.png" width="500">](README.images/admin.png)
+
+###TillApp
+[<img src="README.images/tillapp.png" width="250">](README.images/tillapp.png)
+[<img src="README.images/barcode.png" width="250">](README.images/barcode.png)
+
+#Server Prerequisites
   * [Node](http:https://nodejs.org/)
   * Google Maps API Keys, for both Server and Browser.
   
-#Installation
+#Server Installation
 
 Clone the repository and install NPM dependencies:
 ```
@@ -16,9 +35,9 @@ npm install
 The server will not work without a file describing the API keys. These should be stored in the ./private directory, but are not checked into the repository for security reasons. You'll need to generate your own keys. Follow the instructions provided by Google:
 
 * https://developers.google.com/maps/documentation/javascript/get-api-key#key
-* You need two keys, a Browser Key and a Server Key. The Google Console page [looks like this](/screenshots/create-api-keys.png?raw=true).
+* You'll need both a Browser Key and a Server Key.
 
-#Running the application
+#Running the Server
 
 Install your Google API keys into a file named 'api keys.json' into the private/ directory:
 ```
