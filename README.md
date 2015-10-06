@@ -1,12 +1,16 @@
 #GoNamTaxi Hackathon Prototype 2015
 Developed under the team moniker of 'Logic++'
 
-#Description
-There are two components to this system.
-* The Server, providing a ticket transaction API and a web based administration interface.
-* Till for Taxi, an Android app which scans coded tickets and provides transaction logging coupled to GPS coordinates.
-* A third component for counting taxi passengers was prototyped but not completed by the deadline.
+#The Challenge
+To develop a fast, friendly, fraud resistant, payment method for transportation in Namibia.
 
+#The plan and final outcome
+The initial designs employed a passenger tracking system coupled to a cash payment counter. This implementation involved computer vision and a machine learning algorithm, requiring only a mobile Android device coupled to our backend system. The approach had to be abandoned due to time constraints and other (uninteresting) issues. The system was then rapidly redesigned to scan QR codes as tickets.
+
+The prototype submitted at the Hackathon conclusion consists of two components:
+
+* The Server, providing a ticket transaction API and a web based administration interface.
+* Till for Taxi, an Android app to scan QR Code tickets and log transactions with GPS coordinates.
 
 ###Admin Interface
 [<img src="README.images/admin.png" width="500">](README.images/admin.png)
@@ -33,7 +37,7 @@ The server will not work without a file describing the API keys. These should be
 * https://developers.google.com/maps/documentation/javascript/get-api-key#key
 * You'll need both a Browser Key and a Server Key.
 
-#Running the application
+#Running the Server
 
 Install your Google API keys into a file named 'api keys.json' into the private/ directory:
 ```
