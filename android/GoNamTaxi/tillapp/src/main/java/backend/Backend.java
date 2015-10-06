@@ -1,6 +1,8 @@
 package backend;
 
 import android.location.Location;
+import android.location.LocationListener;
+import android.os.Bundle;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,7 +13,7 @@ import na.nbii.netcomm.NetRequestQueue;
 /**
  * Created by abrie on 15-10-04.
  */
-public class Backend {
+public class Backend implements LocationListener {
     private final NetRequestQueue requestQueue;
     private final PathBuilder pathBuilder;
 
@@ -84,4 +86,14 @@ public class Backend {
                 }
         ));
     }
+
+    public void onLocationChanged(Location location) {
+        setLocation(location);
+    }
+
+    public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+    public void onProviderEnabled(String provider) {}
+
+    public void onProviderDisabled(String provider) {}
 }
