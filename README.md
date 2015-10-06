@@ -5,12 +5,18 @@ Developed under the team moniker of 'Logic++' and presented as 'eCab' to the jud
 To develop a fast, friendly, fraud resistant, payment method for transportation in Namibia.
 
 #The plan and final outcome
-The initial designs employed a passenger tracking system coupled to a cash payment counter. This implementation involved computer vision and a machine learning algorithm, requiring only a mobile Android device coupled to our backend system. This approach had to be abandoned due to time constraints and other (uninteresting) issues. The system then underwent a rapid redesign to scan QR codes as tickets. Note that a 'cash' button remains in the UI, but is essentially vestigial.
+The initial designs employed a visual passenger tracking system coupled to a manual cash payment counter. The implementation involved computer vision and a machine learning algorithm. The system would be deployed as a camera-equipped Android device mounted inside the taxi, and coupled to our backend system through a mobile network. This approach had to be abandoned due to time constraints and pedantic issues. Thus the system underwent a rapid redesign into a platform for scanning QR codes as tickets.
 
 The prototype submitted at the hackathon's conclusion consists of two components:
 
 * The Server, providing a ticket transaction API and a web based administration interface.
 * Till for Taxi, an Android app to scan QR Code tickets and log transactions with GPS coordinates.
+
+##Avenues for further development
+
+- The QR identification system is currently insecure. It needs a robust ID generator.
+- A means for passengers to purchase tickets electronicially, via a browser or app.
+- A means for passengers to verify that a ticket is valid before attempting to use it.
 
 ###Admin Interface
 [<img src="README.images/admin.png" width="500">](README.images/admin.png)
