@@ -1,10 +1,25 @@
-Experimental platform for developing a #GoNamTaxi Hackathon Prototype
+#GoNamTaxi Hackathon Prototype 2015
+Developed under the team moniker of 'Logic++'
 
-#Prerequisites
+#Description
+There are two components to this system.
+* The Server, providing a ticket transaction API and a web based administration interface.
+* Till for Taxi, an Android app which scans coded tickets and provides transaction logging coupled to GPS coordinates.
+* A third component for counting taxi passengers was prototyped but not completed by the deadline.
+
+
+###Admin Interface
+[<img src="README.images/admin.png" width="500">](README.images/admin.png)
+
+###TillApp
+[<img src="README.images/barcode.png" width="250">](README.images/barcode.png)
+[<img src="README.images/tillapp.png" width="250">](README.images/tillapp.png)
+
+#Server Prerequisites
   * [Node](http:https://nodejs.org/)
   * Google Maps API Keys, for both Server and Browser.
   
-#Installation
+#Server Installation
 
 Clone the repository and install NPM dependencies:
 ```
@@ -16,7 +31,7 @@ npm install
 The server will not work without a file describing the API keys. These should be stored in the ./private directory, but are not checked into the repository for security reasons. You'll need to generate your own keys. Follow the instructions provided by Google:
 
 * https://developers.google.com/maps/documentation/javascript/get-api-key#key
-* You need two keys, a Browser Key and a Server Key. The Google Console page [looks like this](/screenshots/create-api-keys.png?raw=true).
+* You'll need both a Browser Key and a Server Key.
 
 #Running the application
 
