@@ -20,7 +20,7 @@ import com.google.android.gms.vision.barcode.Barcode;
 
 import backend.Backend;
 import backend.PathBuilder;
-import na.nbii.netcomm.NetRequestQueue;
+import netcomm.NetRequestQueue;
 import na.nbii.tillapp.R;
 import vision.BarcodeCaptureActivity;
 

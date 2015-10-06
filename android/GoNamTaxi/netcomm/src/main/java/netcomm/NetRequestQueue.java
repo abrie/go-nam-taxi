@@ -1,6 +1,6 @@
 // EXAMPLE TAKEN FROM: https://developer.android.com/training/volley/requestqueue.html
 
-package na.nbii.netcomm;
+package netcomm;
 
 import android.content.Context;
 

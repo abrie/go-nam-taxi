@@ -1,4 +1,4 @@
-package na.nbii.netcomm;
+package netcomm;
 
 import android.util.Log;
 

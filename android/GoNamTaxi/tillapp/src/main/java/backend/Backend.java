@@ -7,8 +7,8 @@ import android.os.Bundle;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import na.nbii.netcomm.NetMethods;
-import na.nbii.netcomm.NetRequestQueue;
+import netcomm.NetMethods;
+import netcomm.NetRequestQueue;
 
 /**
  * Created by abrie on 15-10-04.
