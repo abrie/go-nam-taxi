@@ -9,10 +9,10 @@ var WebSocketServer = require('ws').Server;
 var Dns = require('dns');
 var Os = require('os');
 
-var Util = require('./util');
-var Admin = require('./admin');
-var Routes = require('./routes');
-var TicketTracker = require('./tickettracker.js');
+var Util = require('./modules/util');
+var Admin = require('./modules/admin');
+var Routes = require('./modules/routes');
+var TicketTracker = require('./modules/tickettracker.js');
 
 var socketServer = new WebSocketServer({ port:9090 });
 var clientManager = new Admin.ClientManager();
@@ -112,7 +112,7 @@ function AdminPageHandler() {
     var path = '/client';
 
     function handler(req, res) {
-        Fs.readFile('client.html', 'utf8', function(err, html) {
+        Fs.readFile('html/client.html', 'utf8', function(err, html) {
             if (err) {
                 serve500(req, res);
                 console.log("%s", err);

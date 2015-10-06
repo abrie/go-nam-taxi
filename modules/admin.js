@@ -1,6 +1,6 @@
 var ShortId = require('shortid');
 var Util = require('./util.js');
-var Secrets = Util.tryRequire('./private/api_keys');
+var Secrets = Util.tryRequire('../private/api_keys');
 
 module.exports = {
     ClientManager:ClientManager,

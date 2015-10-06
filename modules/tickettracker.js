@@ -1,5 +1,5 @@
 var Util = require('./util.js');
-var Tickets = Util.tryRequire("./tickets/table");
+var Tickets = Util.tryRequire("../tickets/table");
 
 module.exports = {
     TransactionManager: TransactionManager
