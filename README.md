@@ -5,7 +5,7 @@ Developed under the team moniker of 'Logic++' and presented as 'eCab' to the jud
 To develop a fast, friendly, fraud resistant, payment method for transportation in Namibia.
 
 #The plan and final outcome
-The initial designs employed a visual passenger tracking system coupled to a manual cash payment counter. The implementation involved computer vision and a machine learning algorithm. The system would be deployed as a camera-equipped Android device mounted inside the taxi, and coupled to our backend system through a mobile network. This approach had to be abandoned due to time constraints and pedantic issues. Thus the system underwent a rapid redesign into a platform for scanning QR codes as tickets.
+The initial designs employed a visual passenger tracking system coupled to a manual cash payment counter. The implementation involved computer vision and a machine learning algorithm. The system would be deployed as a camera-equipped Android device mounted inside the taxi, and coupled to our backend system through a mobile network. This approach was abandoned for various reason, and the system was redesigned and adapted into a platform for scanning QR codes as tickets.
 
 The prototype submitted at the hackathon's conclusion consists of two components:
 
