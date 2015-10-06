@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -43,9 +44,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void startLocationListener() {
+    private void publishLocationsTo(LocationListener consumer) {
         LocationManager lm = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, backend);
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, consumer);
     }
 
     private void validateCouponCode(final String couponCode) {
@@ -98,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         backend = new Backend(NetRequestQueue.getInstance(this), new PathBuilder(sharedPref));
         soundEffects = new SoundEffects(this);
         transactionLog = new TransactionLog(this);
-        startLocationListener();
+        publishLocationsTo(backend);
 
         connectListview();
         connectButtons();
@@ -107,6 +108,15 @@ public class MainActivity extends AppCompatActivity {
     private void connectListview() {
         ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(transactionLog.getAdapter());
+    }
+
+    private void startBarcodeScanner() {
+        Intent intent = new Intent(
+                getApplication().getApplicationContext(),
+                BarcodeCaptureActivity.class);
+        intent.putExtra(BarcodeCaptureActivity.AutoFocus, true);
+        intent.putExtra(BarcodeCaptureActivity.UseFlash, false);
+        startActivityForResult(intent, BarcodeCaptureActivity.RC_BARCODE_CAPTURE);
     }
 
     private void connectButtons() {
@@ -132,14 +142,7 @@ public class MainActivity extends AppCompatActivity {
         ticketButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                // launch barcode activity.
-                Intent intent = new Intent(
-                        getApplication().getApplicationContext(),
-                        BarcodeCaptureActivity.class);
-                intent.putExtra(BarcodeCaptureActivity.AutoFocus, true);
-                intent.putExtra(BarcodeCaptureActivity.UseFlash, false);
-                startActivityForResult(intent, BarcodeCaptureActivity.RC_BARCODE_CAPTURE);
-
+                startBarcodeScanner();
             }
         });
     }

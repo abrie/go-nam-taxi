@@ -38,8 +38,6 @@ public class Backend implements LocationListener {
     public Backend(NetRequestQueue netRequestQueue, PathBuilder pathBuilder) {
         this.requestQueue = netRequestQueue;
         this.pathBuilder = pathBuilder;
-
-
     }
 
     public void validateCoupon(String rawValue, final CouponTransactionResultHandler handler) {
