@@ -16,8 +16,8 @@ The prototype submitted at the Hackathon conclusion consists of two components:
 [<img src="README.images/admin.png" width="500">](README.images/admin.png)
 
 ###TillApp
-[<img src="README.images/barcode.png" width="250">](README.images/barcode.png)
 [<img src="README.images/tillapp.png" width="250">](README.images/tillapp.png)
+[<img src="README.images/barcode.png" width="250">](README.images/barcode.png)
 
 #Server Prerequisites
   * [Node](http:https://nodejs.org/)
