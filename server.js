@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-// Abrie loved this project.
 
 var Dispatch = require('dispatch');
 var Fs = require('fs');
@@ -31,7 +30,6 @@ routes.add(new CashRequestHandler());
 routes.add(new CouponRequestHandler());
 routes.add(new AdminPageHandler()); 
 routes.add(new NotFoundHandler());
-
 
 function NotFoundHandler() {
     var path = ".*";
