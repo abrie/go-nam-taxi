@@ -1,5 +1,5 @@
 #GoNamTaxi Hackathon Prototype 2015
-Developed under the team moniker of 'Logic++'
+Developed under the team moniker of 'Logic++' and presented as 'eCab' to the judging panel.
 
 #The Challenge
 To develop a fast, friendly, fraud resistant, payment method for transportation in Namibia.
