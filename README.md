@@ -17,7 +17,7 @@ The prototype submitted at the hackathon's conclusion consists of two components
 - The QR identification system is currently insecure. It needs a robust ID generator.
 - A means for passengers to purchase tickets electronicially, via a browser or app.
 - A means for passengers to verify that a ticket is valid before attempting to use it.
-- etc ...
+- Expanding the backend/backoffice into something useful for real world use.
 
 ###Admin Interface
 [<img src="README.images/admin.png" width="500">](README.images/admin.png)
