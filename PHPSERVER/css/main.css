@@ -1,0 +1,6 @@
+.item-block {
+    //border: 1px solid #DDD;
+}
+.item-block img {
+    max-height: 150px;
+}
