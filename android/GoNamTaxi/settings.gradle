@@ -1,1 +1,1 @@
-include ':tillapp', ':netcomm'
+include ':tillapp', ':netcomm', ':ussdapp'
