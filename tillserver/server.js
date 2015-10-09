@@ -26,7 +26,6 @@ socketServer.on('connection', function(socket) {
 });
 
 var routes = new Routes.HandlerTable()
-routes.add(new CashRequestHandler());
 routes.add(new CouponRequestHandler());
 routes.add(new AdminPageHandler()); 
 routes.add(new NotFoundHandler());
@@ -43,34 +42,6 @@ function NotFoundHandler() {
     return {
         path:path,
         handler: serve404
-    }
-}
-
-function CashRequestHandler() {
-    var path = '/till/received/cash/:id/:lon/:lat';
-
-    function handler(req, res, taxi_id, lon, lat) {
-        console.log("till %s received cash.", taxi_id);
-        var json = JSON.stringify({
-            "content":"cash payment acknowledged",
-            "taxi_id":taxi_id,
-            "cash_payment":"cash",
-            "time": Date.now(),
-            "longitude": lon,
-            "latitude": lat,
-            "is_valid":"---",
-        });
-
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        res.write(json);
-        res.end();
-
-        clientManager.broadcast(json)
-    }
-
-    return {
-        path: path,
-        handler: handler
     }
 }
 
