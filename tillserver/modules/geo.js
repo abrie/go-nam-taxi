@@ -1,5 +1,5 @@
 var Util = require('./util.js');
-var Secrets = Util.tryRequire('./private/api_keys');
+var Secrets = Util.tryRequire('../../private/api_keys');
 
 module.exports = {
     snapToRoads: snapToRoads
