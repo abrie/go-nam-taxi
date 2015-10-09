@@ -31,7 +31,7 @@ routes.add(new AdminPageHandler());
 routes.add(new NotFoundHandler());
 
 function NotFoundHandler() {
-    var path = ".*";
+    var paths = [".*"];
 
     function serve404(req, res) {
         res.writeHead(404, {'Content-Type': 'text/html'});
@@ -40,13 +40,13 @@ function NotFoundHandler() {
     }
 
     return {
-        path:path,
+        paths: paths,
         handler: serve404
     }
 }
 
 function CouponRequestHandler() {
-    var path = '/till/received/coupon/:id/:code/:lon/:lat';
+    var paths = ['/till/received/coupon/:id/:code/:lon/:lat'];
 
     function handler(req, res, taxi_id, code, lon, lat) {
         var lastScan = transactionManager.transact(code);
@@ -72,13 +72,13 @@ function CouponRequestHandler() {
     }
 
     return {
-        path: path,
+        paths: paths,
         handler: handler
     }
 }
 
 function AdminPageHandler() {
-    var path = '/client';
+    var paths = ['/client','/'];
 
     function handler(req, res) {
         Fs.readFile('html/client.html', 'utf8', function(err, html) {
@@ -95,7 +95,7 @@ function AdminPageHandler() {
     }
 
     return {
-        path: path,
+        paths: paths,
         handler: handler
     }
 }
