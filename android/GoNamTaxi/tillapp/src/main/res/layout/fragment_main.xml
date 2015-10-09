@@ -28,16 +28,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/frame_box"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"
-        android:text="@string/scan_ticket" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/frame_box"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:text="@string/paid_cash"
-        android:id="@+id/btn_pay_cash" />
+        android:text="@string/scan_ticket" />
 
 </RelativeLayout>

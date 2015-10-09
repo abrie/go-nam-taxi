@@ -120,24 +120,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void connectButtons() {
-        Button cashButton = (Button)findViewById(R.id.btn_pay_cash);
-        cashButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                backend.submitCash(new Backend.CashTransactionResultHandler() {
-                    @Override
-                    public void onCashTransactionResult(long timeStamp) {
-                        transactionLog.logCash(timeStamp);
-                    }
-
-                    @Override
-                    public void onCashTransactionError(String error) {
-                        showError(error);
-                    }
-                });
-            }
-        });
-
         Button ticketButton = (Button)findViewById(R.id.btn_scan_ticket);
         ticketButton.setOnClickListener(new View.OnClickListener() {
             @Override
