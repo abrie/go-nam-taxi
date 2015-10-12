@@ -134,48 +134,12 @@
             });
         }
 
-        function handleSnappedPath(json) {
-            function processSnapToRoadResponse(snappedPoints) {
-                snappedCoordinates = [];
-                placeIdArray = [];
-                for (var i = 0; i < snappedPoints.length; i++) {
-                    var latlng = new google.maps.LatLng(
-                            snappedPoints[i].location.latitude,
-                            snappedPoints[i].location.longitude);
-                    snappedCoordinates.push(latlng);
-                    placeIdArray.push(snappedPoints[i].placeId);
-                }
-
-                return snappedCoordinates;
-            }
-
-            function drawPolyline(coordinates) {
-                var snappedPolyline = new google.maps.Polyline({
-                    path: coordinates,
-                    strokeColor: 'blue',
-                    strokeWeight: 6
-                });
-
-                if (state.polylines) {
-                    state.polylines.setMap(null);
-                }
-
-                snappedPolyline.setMap(state.map.map);
-                state.polylines = snappedPolyline;
-            }
-
-            var snappedCoordinates = processSnapToRoadResponse(json.content);
-            drawPolyline(snappedCoordinates);
-
-        }
-
         function connectToServer() {
             var ws = new WebSocket(config.server_websocket_url);
 
             var handlers = {
                 0:handleHello,
                 1:handleMessage,
-                2:handleSnappedPath,
             }
 
             ws.onmessage = function(event) {
@@ -205,7 +169,7 @@
             var params = {
                 'key': getApiKey(),
                 'callback': "onMapAPILoaded",
-                'libraries': ['drawing'].join(',')
+                'libraries': [].join(',')
             }
             
             var script = document.createElement('script');
@@ -217,29 +181,9 @@
 
         function onMapAPILoaded() {
             var map = createMap();
-            var draw = createDrawManager();
-
-            draw.setMap(map);
-            draw.addListener('polylinecomplete', function(poly) {
-                function pathToString(path) {
-                    var pathValues = [];
-                    for (var i = 0; i < path.getLength(); i++) {
-                        pathValues.push(path.getAt(i).toUrlValue());
-                    }
-                    return pathValues.join('|');
-                }
-
-                state.websocket.send(JSON.stringify({
-                    clientId: state.clientId,
-                    path: pathToString(poly.getPath())
-                }));
-
-                poly.setMap(null);
-            });
 
             state.map = {
-                map: map,
-                draw: draw
+                map: map
             }
         }
 
@@ -247,26 +191,6 @@
             return new google.maps.Map(ui.map_container, {
                 center: {lat: -22.5700, lng:17.0836},
                 zoom: 13 
-            });
-        }
-
-        function createDrawManager() {
-            // See example at: https://developers.google.com/maps/documentation/roads/snap
-            // Enables the polyline drawing control. Click on the map to start drawing a
-            // polyline. Each click will add a new vertice. Double-click to stop drawing.
-            return new google.maps.drawing.DrawingManager({
-                drawingMode: google.maps.drawing.OverlayType.POLYLINE,
-                drawingControl: true,
-                drawingControlOptions: {
-                    position: google.maps.ControlPosition.TOP_CENTER,
-                    drawingModes: [
-                        google.maps.drawing.OverlayType.POLYLINE
-                    ]
-                },
-                polylineOptions: {
-                    strokeColor: '#696969',
-                    strokeWeight: 2
-                }
             });
         }
 
