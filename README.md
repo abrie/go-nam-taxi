@@ -36,7 +36,7 @@ The prototype submitted at the hackathon's conclusion consists of two components
 Clone the repository and install NPM dependencies:
 ```
 git clone https://github.com/abrie/go-nam-taxi.git
-cd go-nam-taxi
+cd go-nam-taxi/tillserver
 npm install
 ```
 
@@ -58,6 +58,7 @@ Install your Google API keys into a file named 'api keys.json' into the private/
 You may then start the server:
 
 ```
+cd tillserver
 node server.js
 ```
 This will start a server on localhost, and if all is good you'll be greeted with the following:
