@@ -1,28 +1,28 @@
-#GoNamTaxi Hackathon Prototype 2015
+##GoNamTaxi Hackathon Prototype 2015
 Developed under the team moniker of 'Logic++' and presented as 'eCab' to the judging panel.
 
-#The Challenge
+###The Challenge
 To develop a fast, friendly, fraud resistant, payment method for transportation in Namibia.
 
-#The plan and final outcome
-The initial designs employed a visual passenger tracking system coupled to a manual cash payment counter. The implementation involved computer vision and a machine learning algorithm. The system would be deployed as a camera-equipped Android device mounted inside a taxi, coupled to the backend system through the mobile network. This approach was abandoned for various reasons, and the system underwent a redesign into a platform for scanning QR codes as tickets. The trajectory is documented in the repository history.
+###The Result
+The initial design incorporated a visual passenger tracking system coupled to a manual cash payment counter. The implementation involved computer vision and a machine learning algorithm. The system would be deployed as a camera-equipped Android device mounted inside a taxi, served by the backend system through a cellular internet network. This approach was abandoned for various reasons, and the system underwent a redesign into a platform for scanning QR codes as tickets. The trajectory is documented in the repository history.
 
 The prototype submitted at the hackathon's conclusion consists of two components:
 
 * The Server, providing a ticket transaction API and a web based administration interface.
 * Till for Taxi, an Android app to scan QR Code tickets and log transactions with GPS coordinates.
 
-##Avenues for further development
+###Avenues for further development
 
 - The QR identification system is currently insecure. It needs a robust ID generator.
 - A means for passengers to purchase tickets electronicially, via a browser or app.
 - A means for passengers to verify that a ticket is valid before attempting to use it.
-- Expanding the backend/backoffice into something useful for real world use.
+- Expansion of the backend/backoffice into something useful for real world use.
 
 ###Admin Interface
 [<img src="README.images/admin.png" width="500">](README.images/admin.png)
 
-###TillApp
+####TillApp
 [<img src="README.images/tillapp.png" width="250">](README.images/tillapp.png)
 [<img src="README.images/barcode.png" width="250">](README.images/barcode.png)
 
@@ -69,7 +69,7 @@ The server is then listening on port 8080 and port 9090. Port 8080 serves HTTP, 
 
 ##Building the Client
 
-Use Android Studio 1.4, YMMV.
+Built with Android Studio 1.4, with minimum SDK IceCreamSandwich.
 
 ##Running the Client
 
